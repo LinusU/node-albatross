@@ -98,6 +98,12 @@ Find all records that matches `query`.
 
 Count number of documents matching the query.
 
+#### `distinct(key[, query[, opts]][, cb]) -> (err, list)`
+
+Finds a list of distinct values for the given key.
+
+*note: if you specify `opts` you also need to specify `query`*
+
 #### `insert(docs[, opts][, cb]) -> (err, docs)`
 
 Inserts a single document or a an array of documents.

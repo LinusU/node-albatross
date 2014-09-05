@@ -155,6 +155,49 @@ describe('Collection', function () {
 
   });
 
+  describe('#distinct', function () {
+
+    it('should find one distinct names', function (done) {
+
+      user.distinct('name', { name: 'Linus' }, function (err, res) {
+        assert.ifError(err);
+        assert(Array.isArray(res));
+        assert.equal(res.length, 1);
+        assert.equal(res[0], 'Linus');
+        done();
+      });
+
+    });
+
+    it('should find some distinct names', function (done) {
+
+      user.distinct('name', { name: { $ne: 'Linus' } }, function (err, res) {
+        assert.ifError(err);
+        assert(Array.isArray(res));
+        assert.equal(res.length, 2);
+        assert.notEqual(res.indexOf('Steve'), -1);
+        assert.notEqual(res.indexOf('Bob'), -1);
+        done();
+      });
+
+    });
+
+    it('should find all distinct names', function (done) {
+
+      user.distinct('name', function (err, res) {
+        assert.ifError(err);
+        assert(Array.isArray(res));
+        assert.equal(res.length, 3);
+        assert.notEqual(res.indexOf('Linus'), -1);
+        assert.notEqual(res.indexOf('Steve'), -1);
+        assert.notEqual(res.indexOf('Bob'), -1);
+        done();
+      });
+
+    });
+
+  });
+
   describe('#insert', function () {
 
     it('should insert a single document', function (done) {
