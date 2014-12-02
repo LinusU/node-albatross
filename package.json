@@ -1,16 +1,16 @@
 {
   "name": "albatross",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Linus Unnebäck <linus@folkdatorn.se>",
   "repository": {
     "type": "git",
     "url": "https://github.com/LinusU/node-albatross.git"
   },
   "dependencies": {
-    "debug": "^2.0.0",
-    "mongodb": "^1.4.10"
+    "debug": "^2.1.0",
+    "mongodb": "^1.4.22"
   },
   "devDependencies": {
-    "mocha": "^1.21.4"
+    "mocha": "^2.0.1"
   }
 }
