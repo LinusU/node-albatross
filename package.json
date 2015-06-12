@@ -11,10 +11,10 @@
     "url": "https://github.com/LinusU/node-albatross.git"
   },
   "dependencies": {
-    "debug": "^2.1.0",
-    "mongodb": "^1.4.22"
+    "debug": "^2.2.0",
+    "mongodb": "^2.0.33"
   },
   "devDependencies": {
-    "mocha": "^2.0.1"
+    "mocha": "^2.2.5"
   }
 }
