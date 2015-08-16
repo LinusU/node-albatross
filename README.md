@@ -1,5 +1,4 @@
-
-![Albatross](/header.png?raw=true "Albatross")
+# ![Albatross](/header.png?raw=true "Albatross")
 
 Albatross is a small library that makes accessing MongoDB from Node.js a
 breeze. It's goal is to be a thin wrapper that enables you to forget about
