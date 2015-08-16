@@ -27,7 +27,7 @@ describe('Albatross', function () {
 
   it('should emit errors', function (done) {
     albatross('mongodb://127.0.0.1:46543').once('error', function (err) {
-      assert(err)
+      assert.ok(err)
       done()
     })
   })
@@ -37,10 +37,10 @@ describe('Albatross', function () {
     var str = id1.toHexString()
     var id2 = db.id(str)
 
-    assert(id1 instanceof albatross.ObjectID)
-    assert(id2 instanceof albatross.ObjectID)
-    assert(albatross.ObjectID.isValid(str))
-    assert(id1.equals(id2))
+    assert.ok(id1 instanceof albatross.ObjectID)
+    assert.ok(id2 instanceof albatross.ObjectID)
+    assert.ok(albatross.ObjectID.isValid(str))
+    assert.ok(id1.equals(id2))
   })
 
   it('should expose mongodb bson api', function () {

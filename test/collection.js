@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var includes = require('array-includes')
 var albatross = require('../')
 
 var ObjectID = albatross.ObjectID
@@ -27,7 +28,7 @@ describe('Collection', function () {
     it('should find one record', function (done) {
       user.findById(linusId, function (err, doc) {
         assert.ifError(err)
-        assert(doc)
+        assert.ok(doc)
         assert.equal(doc.name, 'Linus')
         done()
       })
@@ -46,7 +47,7 @@ describe('Collection', function () {
     it('should find one record', function (done) {
       user.findOne({ name: 'Linus' }, function (err, doc) {
         assert.ifError(err)
-        assert(doc)
+        assert.ok(doc)
         assert.equal(doc.name, 'Linus')
         done()
       })
@@ -55,7 +56,7 @@ describe('Collection', function () {
     it('should find only one record', function (done) {
       user.findOne({ name: { $ne: 'Linus' } }, function (err, doc) {
         assert.ifError(err)
-        assert(doc)
+        assert.ok(doc)
         assert.notEqual(doc.name, 'Linus')
         done()
       })
@@ -66,8 +67,8 @@ describe('Collection', function () {
     it('should find one record', function (done) {
       user.find({ name: 'Linus' }, function (err, docs) {
         assert.ifError(err)
-        assert(docs)
-        assert(Array.isArray(docs))
+        assert.ok(docs)
+        assert.ok(Array.isArray(docs))
         assert.equal(docs.length, 1)
         assert.equal(docs[0].name, 'Linus')
         done()
@@ -77,9 +78,11 @@ describe('Collection', function () {
     it('should find multiple records', function (done) {
       user.find({ name: { $ne: 'Linus' } }, function (err, docs) {
         assert.ifError(err)
-        assert(docs)
-        assert(Array.isArray(docs))
+        assert.ok(docs)
+        assert.ok(Array.isArray(docs))
         assert.equal(docs.length, 2)
+        assert.notEqual(docs[0].name, 'Linus')
+        assert.notEqual(docs[1].name, 'Linus')
         done()
       })
     })
@@ -87,8 +90,8 @@ describe('Collection', function () {
     it('should find all records', function (done) {
       user.find({}, function (err, docs) {
         assert.ifError(err)
-        assert(docs)
-        assert(Array.isArray(docs))
+        assert.ok(docs)
+        assert.ok(Array.isArray(docs))
         assert.equal(docs.length, 3)
         done()
       })
@@ -125,7 +128,7 @@ describe('Collection', function () {
     it('should find one distinct names', function (done) {
       user.distinct('name', { name: 'Linus' }, function (err, res) {
         assert.ifError(err)
-        assert(Array.isArray(res))
+        assert.ok(Array.isArray(res))
         assert.equal(res.length, 1)
         assert.equal(res[0], 'Linus')
         done()
@@ -135,10 +138,10 @@ describe('Collection', function () {
     it('should find some distinct names', function (done) {
       user.distinct('name', { name: { $ne: 'Linus' } }, function (err, res) {
         assert.ifError(err)
-        assert(Array.isArray(res))
+        assert.ok(Array.isArray(res))
         assert.equal(res.length, 2)
-        assert.notEqual(res.indexOf('Steve'), -1)
-        assert.notEqual(res.indexOf('Bob'), -1)
+        assert.ok(includes(res, 'Steve'))
+        assert.ok(includes(res, 'Bob'))
         done()
       })
     })
@@ -146,11 +149,11 @@ describe('Collection', function () {
     it('should find all distinct names', function (done) {
       user.distinct('name', function (err, res) {
         assert.ifError(err)
-        assert(Array.isArray(res))
+        assert.ok(Array.isArray(res))
         assert.equal(res.length, 3)
-        assert.notEqual(res.indexOf('Linus'), -1)
-        assert.notEqual(res.indexOf('Steve'), -1)
-        assert.notEqual(res.indexOf('Bob'), -1)
+        assert.ok(includes(res, 'Linus'))
+        assert.ok(includes(res, 'Steve'))
+        assert.ok(includes(res, 'Bob'))
         done()
       })
     })
@@ -160,7 +163,7 @@ describe('Collection', function () {
     it('should insert a single document', function (done) {
       user.insert({ test: 'foo' }, function (err, doc) {
         assert.ifError(err)
-        assert(doc)
+        assert.ok(doc)
         assert.equal(doc.test, 'foo')
         done()
       })
@@ -169,7 +172,7 @@ describe('Collection', function () {
     it('should insert multiple documents', function (done) {
       user.insert([{ test: 'foo' }, { test: 'bar' }], function (err, docs) {
         assert.ifError(err)
-        assert(Array.isArray(docs))
+        assert.ok(Array.isArray(docs))
         assert.equal(docs.length, 2)
         assert.equal(docs[0].test, 'foo')
         assert.equal(docs[1].test, 'bar')
@@ -186,7 +189,7 @@ describe('Collection', function () {
 
         user.find({ name: 'Linus' }, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 1)
           assert.equal(docs[0].name, 'Linus')
           assert.equal(docs[0].year, 1992)
@@ -202,7 +205,7 @@ describe('Collection', function () {
 
         user.find({ name: { $ne: 'Linus' } }, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 2)
           assert.equal(docs[0].famous, true)
           assert.equal(docs[1].famous, true)
@@ -218,7 +221,7 @@ describe('Collection', function () {
 
         user.find({}, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 3)
           assert.equal(docs[0].planet, 'Earth')
           assert.equal(docs[1].planet, 'Earth')
@@ -251,7 +254,7 @@ describe('Collection', function () {
 
         user.find({ name: 'Linus' }, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 0)
           done()
         })
@@ -265,7 +268,7 @@ describe('Collection', function () {
 
         user.find({ name: { $ne: 'Linus' } }, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 0)
           done()
         })
@@ -279,7 +282,7 @@ describe('Collection', function () {
 
         user.find({}, function (err, docs) {
           assert.ifError(err)
-          assert(Array.isArray(docs))
+          assert.ok(Array.isArray(docs))
           assert.equal(docs.length, 0)
           done()
         })
