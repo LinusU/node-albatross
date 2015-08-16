@@ -3,6 +3,10 @@
   "version": "0.2.1",
   "license": "MIT",
   "author": "Linus Unnebäck <linus@folkdatorn.se>",
+  "files": [
+    "index.js",
+    "lib/"
+  ],
   "scripts": {
     "test": "standard && mocha"
   },
