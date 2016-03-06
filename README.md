@@ -13,19 +13,19 @@ npm install --save albatross
 ## Usage
 
 ```js
-var albatross = require('albatross');
+var albatross = require('albatross')
 
-var db = albatross('mongodb://localhost/test');
-var user = db.collection('user');
+var db = albatross('mongodb://localhost/test')
+var user = db.collection('user')
 
 user
   .insert({ name: 'Linus', born: 1992 })
   .insert({ name: 'Steve', born: 1955 })
   .findOne({ born: 1992 }, function (err, doc) {
-    if (err) { throw err; }
+    if (err) throw err
 
-    console.log('Hello ' + doc.name);
-  });
+    console.log('Hello ' + doc.name)
+  })
 ```
 
 You can start querying the database right away, as soon as a connection is
