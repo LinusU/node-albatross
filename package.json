@@ -16,10 +16,11 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "mongodb": "^2.0.33"
+    "mongodb": "^2.1.0"
   },
   "devDependencies": {
     "array-includes": "^3.0.0",
+    "concat-stream": "^1.5.1",
     "mocha": "^2.2.5",
     "standard": "^6.0.5"
   }
