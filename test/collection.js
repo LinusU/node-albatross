@@ -1,27 +1,33 @@
 /* eslint-env mocha */
 
 var assert = require('assert')
+var crypto = require('crypto')
 var includes = require('array-includes')
 var albatross = require('../')
 
+var id = crypto.randomBytes(4).toString('hex')
 var ObjectID = albatross.ObjectID
 
 describe('Collection', function () {
   var db, user, linusId
 
-  before(function () {
+  before(function (done) {
     db = albatross('mongodb://localhost/albatross-test')
-    user = db.collection('user')
+    user = db.collection('user-' + id)
+    user.remove({}, done)
   })
 
-  beforeEach(function () {
+  beforeEach(function (done) {
     linusId = new ObjectID()
 
     user
-      .remove({})
       .insert({ name: 'Linus', _id: linusId })
       .insert({ name: 'Steve' })
-      .insert({ name: 'Bob' })
+      .insert({ name: 'Bob' }, done)
+  })
+
+  afterEach(function (done) {
+    user.remove({}, done)
   })
 
   describe('#findById', function () {
