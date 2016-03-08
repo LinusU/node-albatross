@@ -26,6 +26,25 @@ user
 
     console.log('Hello ' + doc.name)
   })
+
+var fs = require('fs')
+var grid = db.grid()
+
+var input = fs.createReadStream('README.md')
+var opts = { filename: 'README.md', contentType: 'text/plain' }
+
+grid.upload(input, opts, function (err, id) {
+  if (err) throw err
+
+  grid.download(id, function (err, result) {
+    if (err) throw err
+
+    result.filename // 'README.md'
+    result.contentType // 'text/plain'
+
+    result.stream.pipe(process.stdout)
+  })
+})
 ```
 
 You can start querying the database right away, as soon as a connection is
@@ -65,6 +84,11 @@ Timestamp
 #### `.collection(name)`
 
 Returns a new instance of Collection bound to the collection named `name`.
+
+#### `.grid([name])`
+
+Returns a new instance of Grid, optionally using the supplied `name` as the
+name of the root collection.
 
 #### `.id(strOrObjectID)`
 
@@ -122,6 +146,52 @@ Update documents matching `selector`.
 Removes documents specified by `selector`.
 
 *note: to only remove one document, specify `single: true` in `opts`*
+
+### Grid
+
+#### `id(strOrObjectID)`
+
+Makes sure that the given argument is an ObjectID.
+
+#### `upload(stream[, opts][, cb]) -> (err, result)`
+
+Store the `stream` as a file in the grid store, `opts` is a object with the
+following properties. All options are optionally.
+
+- `filename`: The value of the `filename` key in the files doc
+- `chunkSizeBytes`: Overwrite this bucket's `chunkSizeBytes` for this file
+- `metadata`: Object to store in the file document's `metadata` field
+- `contentType`: String to store in the file document's `contentType` field
+- `aliases`: Array of strings to store in the file document's `aliases` field
+
+The `result` object has the following properties:
+
+- `id`: The id of the file
+- `md5`: The md5 hash of the file
+- `length`: The length of the file
+- `chunkSize`: The size of each chunk in bytes
+- `filename`: The value of the `filename` key in the files doc
+- `metadata`: An object with the metadata associated with the file
+- `contentType`: The value of the `contentType` key in the files doc
+
+#### `download(id[, cb]) -> (err, result)`
+
+Get the file with the specified `id` from the grid store. The callback will
+receive a `result` object with the following properties. If no file with the
+indicated `id` was found, `result` will be `null`.
+
+- `id`: The id of the file
+- `md5`: The md5 hash of the file
+- `length`: The length of the file
+- `chunkSize`: The size of each chunk in bytes
+- `filename`: The value of the `filename` key in the files doc
+- `metadata`: An object with the metadata associated with the file
+- `contentType`: The value of the `contentType` key in the files doc
+- `stream`: The stream with the data that was inside the file
+
+#### `delete(id[, cb]) -> (err)`
+
+Delete the file with the specified `id` from the grid store.
 
 ## In depth documentation
 
