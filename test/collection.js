@@ -83,6 +83,33 @@ describe('Collection', () => {
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 3)
     })
+
+    it('should limit number of records', async () => {
+      const docs = await user.find({}, { limit: 2 })
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 2)
+    })
+
+    it('should sort records ascending', async () => {
+      const docs = await user.find({}, { sort: { name: 1 } })
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 3)
+      assert.strictEqual(docs[0].name, 'Bob')
+      assert.strictEqual(docs[1].name, 'Linus')
+      assert.strictEqual(docs[2].name, 'Steve')
+    })
+
+    it('should sort records descending', async () => {
+      const docs = await user.find({}, { sort: { name: -1 } })
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 3)
+      assert.strictEqual(docs[0].name, 'Steve')
+      assert.strictEqual(docs[1].name, 'Linus')
+      assert.strictEqual(docs[2].name, 'Bob')
+    })
   })
 
   describe('#count', () => {
