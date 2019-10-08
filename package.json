@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "license": "MIT",
   "author": "Linus Unnebäck <linus@folkdatorn.se>",
+  "repository": "LinusU/node-albatross",
   "files": [
     "index.js",
     "lib/"
@@ -10,18 +11,16 @@
   "scripts": {
     "test": "standard && mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/LinusU/node-albatross.git"
-  },
   "dependencies": {
-    "debug": "^2.2.0",
-    "mongodb": "^2.1.0"
+    "debug": "^4.1.1",
+    "mongodb": "^3.3.2"
   },
   "devDependencies": {
-    "array-includes": "^3.0.0",
-    "concat-stream": "^1.5.1",
-    "mocha": "^2.2.5",
-    "standard": "^6.0.5"
+    "get-stream": "^5.1.0",
+    "mocha": "^6.2.1",
+    "standard": "^14.3.1"
+  },
+  "engines": {
+    "node": ">=8"
   }
 }

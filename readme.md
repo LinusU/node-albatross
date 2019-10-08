@@ -13,38 +13,31 @@ npm install --save albatross
 ## Usage
 
 ```js
-var albatross = require('albatross')
+const albatross = require('albatross')
 
-var db = albatross('mongodb://localhost/test')
-var user = db.collection('user')
+const db = albatross('mongodb://localhost/test')
+const user = db.collection('user')
 
-user
-  .insert({ name: 'Linus', born: 1992 })
-  .insert({ name: 'Steve', born: 1955 })
-  .findOne({ born: 1992 }, function (err, doc) {
-    if (err) throw err
+await user.insert({ name: 'Linus', born: 1992 })
+await user.insert({ name: 'Steve', born: 1955 })
 
-    console.log('Hello ' + doc.name)
-  })
+const doc = await user.findOne({ born: 1992 })
+console.log('Hello ' + doc.name)
+//=> Hello Linus
 
-var fs = require('fs')
-var grid = db.grid()
+const fs = require('fs')
+const grid = db.grid()
 
-var input = fs.createReadStream('README.md')
-var opts = { filename: 'README.md', contentType: 'text/plain' }
+const input = fs.createReadStream('readme.md')
+const opts = { filename: 'readme.md', contentType: 'text/plain' }
 
-grid.upload(input, opts, function (err, id) {
-  if (err) throw err
+const id = await grid.upload(input, opts)
+const result = await grid.download(id)
 
-  grid.download(id, function (err, result) {
-    if (err) throw err
+result.filename // 'readme.md'
+result.contentType // 'text/plain'
 
-    result.filename // 'README.md'
-    result.contentType // 'text/plain'
-
-    result.stream.pipe(process.stdout)
-  })
-})
+result.stream.pipe(process.stdout)
 ```
 
 You can start querying the database right away, as soon as a connection is
@@ -66,15 +59,39 @@ Creates a new instance of `Albatross` and connect to the specified uri.
 The following functions are exposed on the module:
 
 ```text
-BSON
+Admin
+AggregationCursor
+BSONRegExp
 Binary
+Chunk
 Code
+Collection
+CommandCursor
+CoreConnection
+CoreServer
+Cursor
 DBRef
+Db
+Decimal128
 Double
+GridFSBucket
+GridStore
+Int32
+Logger
 Long
+Map
 MaxKey
 MinKey
+MongoClient
+MongoError
+MongoNetworkError
+MongoTimeoutError
+Mongos
 ObjectID
+ObjectId
+ReadPreference
+ReplSet
+Server
 Symbol
 Timestamp
 ```
@@ -94,10 +111,9 @@ name of the root collection.
 
 Makes sure that the given argument is an ObjectID.
 
-#### `.close([cb])`
+#### `.close(): Promise<void>`
 
-Closes the connection to the server and calls callback with potential error
-as first argument.
+Closes the connection to the server.
 
 ### Collection
 
@@ -105,45 +121,45 @@ as first argument.
 
 Makes sure that the given argument is an ObjectID.
 
-#### `findById(id[, opts][, cb]) -> (err, doc)`
+#### `findById(id[, opts]): Promise<object>`
 
 Find one document with the specified `id`.
 
-#### `findOne(query[, opts][, cb]) -> (err, doc)`
+#### `findOne(query[, opts]): Promise<object>`
 
 Find the first document that matches `query`.
 
-#### `find(query[, opts][, cb]) -> (err, docs)`
+#### `find(query[, opts]): Promise<object[]>`
 
 Find all records that matches `query`.
 
-#### `count(query[, opts][, cb]) -> (err, count)`
+#### `count(query[, opts]): Promise<number>`
 
 Count number of documents matching the query.
 
-#### `distinct(key[, query[, opts]][, cb]) -> (err, list)`
+#### `distinct(key[, query[, opts]]): Promise<any[]>`
 
 Finds a list of distinct values for the given key.
 
 *note: if you specify `opts` you also need to specify `query`*
 
-#### `insert(docs[, opts][, cb]) -> (err, docs)`
+#### `insert(docs[, opts]): Promise<object | object[]>`
 
 Inserts a single document or a an array of documents.
 
-Second argument to callback is the documents that was inserted. When called
-with an object instead of an array as the first argument, the callback receives
-an object instead of an array as well.
+The Promise will resolve with the documents that was inserted. When called
+with an object instead of an array as the first argument, the Promise resolves
+with an object instead of an array as well.
 
-#### `update(selector, document[, opts][, cb]) -> (err, nUpdated)`
+#### `update(selector, document[, opts]): Promise<number>`
 
-Update documents matching `selector`.
+Update documents matching `selector`. Resolves with the number of documents updated.
 
 *note: to update more than one document, specify `multi: true` in `opts`*
 
-#### `remove(selector[, opts][, cb]) -> (err, nRemoved)`
+#### `remove(selector[, opts]): Promise<number>`
 
-Removes documents specified by `selector`.
+Removes documents specified by `selector`. Resolves with the number of documents removed.
 
 *note: to only remove one document, specify `single: true` in `opts`*
 
@@ -153,7 +169,7 @@ Removes documents specified by `selector`.
 
 Makes sure that the given argument is an ObjectID.
 
-#### `upload(stream[, opts][, cb]) -> (err, result)`
+#### `upload(stream[, opts]): Promise<FileInfo>`
 
 Store the `stream` as a file in the grid store, `opts` is a object with the
 following properties. All options are optionally.
@@ -164,7 +180,7 @@ following properties. All options are optionally.
 - `contentType`: String to store in the file document's `contentType` field
 - `aliases`: Array of strings to store in the file document's `aliases` field
 
-The `result` object has the following properties:
+The `FileInfo` object has the following properties:
 
 - `id`: The id of the file
 - `md5`: The md5 hash of the file
@@ -174,11 +190,11 @@ The `result` object has the following properties:
 - `metadata`: An object with the metadata associated with the file
 - `contentType`: The value of the `contentType` key in the files doc
 
-#### `download(id[, cb]) -> (err, result)`
+#### `download(id): Promise<FileInfo>`
 
-Get the file with the specified `id` from the grid store. The callback will
-receive a `result` object with the following properties. If no file with the
-indicated `id` was found, `result` will be `null`.
+Get the file with the specified `id` from the grid store. The Promise will
+resolve with an object with the following properties. If no file with the
+indicated `id` was found, the Promise will resolve to `null`.
 
 - `id`: The id of the file
 - `md5`: The md5 hash of the file
@@ -189,7 +205,7 @@ indicated `id` was found, `result` will be `null`.
 - `contentType`: The value of the `contentType` key in the files doc
 - `stream`: The stream with the data that was inside the file
 
-#### `delete(id[, cb]) -> (err)`
+#### `delete(id): Promise<void>`
 
 Delete the file with the specified `id` from the grid store.
 
