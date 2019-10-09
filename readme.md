@@ -151,9 +151,12 @@ The Promise will resolve with the documents that was inserted. When called
 with an object instead of an array as the first argument, the Promise resolves
 with an object instead of an array as well.
 
-#### `update(selector, document[, opts]): Promise<number>`
+#### `update(selector, document[, opts]): Promise<UpdateResult>`
 
-Update documents matching `selector`. Resolves with the number of documents updated.
+Update documents matching `selector`. Resolves with an object with the following properties:
+
+- `matched`: Number of documents that matched the query
+- `modified`: Number of documents that was modified
 
 #### `remove(selector[, opts]): Promise<number>`
 

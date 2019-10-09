@@ -174,7 +174,7 @@ describe('Collection', () => {
   describe('#update', () => {
     it('should update one record', async () => {
       const res = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
-      assert.strictEqual(res, 1)
+      assert.deepStrictEqual(res, { matched: 1, modified: 1 })
 
       const docs = await user.find({ name: 'Linus' })
       assert.ok(Array.isArray(docs))
@@ -185,7 +185,7 @@ describe('Collection', () => {
 
     it('should update multiple records', async () => {
       const res = await user.update({ name: { $ne: 'Linus' } }, { $set: { famous: true } }, { multi: true })
-      assert.strictEqual(res, 2)
+      assert.deepStrictEqual(res, { matched: 2, modified: 2 })
 
       const docs = await user.find({ name: { $ne: 'Linus' } })
       assert.ok(Array.isArray(docs))
@@ -196,7 +196,7 @@ describe('Collection', () => {
 
     it('should update all records', async () => {
       const res = await user.update({}, { $set: { planet: 'Earth' } }, { multi: true })
-      assert.strictEqual(res, 3)
+      assert.deepStrictEqual(res, { matched: 3, modified: 3 })
 
       const docs = await user.find({})
       assert.ok(Array.isArray(docs))
@@ -208,13 +208,21 @@ describe('Collection', () => {
 
     it('should only update one record', async () => {
       const res = await user.update({}, { $set: { planet: 'Earth' } })
-      assert.strictEqual(res, 1)
+      assert.deepStrictEqual(res, { matched: 1, modified: 1 })
     })
 
     it('should not accept single', () => {
       assert.throws(() => {
         user.update({}, { $set: { planet: 'Earth' } }, { single: true })
       })
+    })
+
+    it('should return number of documents matched & modified', async () => {
+      const first = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(first, { matched: 1, modified: 1 })
+
+      const second = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(second, { matched: 1, modified: 0 })
     })
   })
 
