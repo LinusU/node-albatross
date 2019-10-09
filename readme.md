@@ -155,13 +155,9 @@ with an object instead of an array as well.
 
 Update documents matching `selector`. Resolves with the number of documents updated.
 
-*note: to update more than one document, specify `multi: true` in `opts`*
-
 #### `remove(selector[, opts]): Promise<number>`
 
 Removes documents specified by `selector`. Resolves with the number of documents removed.
-
-*note: to only remove one document, specify `single: true` in `opts`*
 
 ### Grid
 
