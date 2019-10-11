@@ -121,10 +121,6 @@ Closes the connection to the server.
 
 Makes sure that the given argument is an ObjectID.
 
-#### `findById(id[, opts]): Promise<object>`
-
-Find one document with the specified `id`.
-
 #### `findOne(query[, opts]): Promise<object>`
 
 Find the first document that matches `query`.

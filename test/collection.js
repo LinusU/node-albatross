@@ -32,19 +32,6 @@ describe('Collection', () => {
     await db.close()
   })
 
-  describe('#findById', () => {
-    it('should find one record', async () => {
-      const doc = await user.findById(linusId)
-      assert.ok(doc)
-      assert.strictEqual(doc.name, 'Linus')
-    })
-
-    it('should not match if string', async () => {
-      const doc = await user.findById(linusId.toHexString())
-      assert.strictEqual(doc, null)
-    })
-  })
-
   describe('#findOne', () => {
     it('should find one record', async () => {
       const doc = await user.findOne({ name: 'Linus' })
