@@ -13,7 +13,7 @@ describe('Collection', () => {
   before(async () => {
     db = albatross('mongodb://localhost/albatross-test')
     user = db.collection('user-' + id)
-    await user.remove({})
+    await user.deleteMany({})
   })
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe('Collection', () => {
   })
 
   afterEach(async () => {
-    await user.remove({})
+    await user.deleteMany({})
   })
 
   after(async () => {
@@ -213,9 +213,9 @@ describe('Collection', () => {
     })
   })
 
-  describe('#remove', () => {
-    it('should remove one record', async () => {
-      const res = await user.remove({ name: 'Linus' })
+  describe('#deleteOne', () => {
+    it('should delete one record', async () => {
+      const res = await user.deleteOne({ name: 'Linus' })
       assert.strictEqual(res, 1)
 
       const docs = await user.find({ name: 'Linus' })
@@ -223,8 +223,15 @@ describe('Collection', () => {
       assert.strictEqual(docs.length, 0)
     })
 
-    it('should remove multiple records', async () => {
-      const res = await user.remove({ name: { $ne: 'Linus' } })
+    it('should only delete one record', async () => {
+      const res = await user.deleteOne({})
+      assert.strictEqual(res, 1)
+    })
+  })
+
+  describe('#deleteMany', () => {
+    it('should delete multiple records', async () => {
+      const res = await user.deleteMany({ name: { $ne: 'Linus' } })
       assert.strictEqual(res, 2)
 
       const docs = await user.find({ name: { $ne: 'Linus' } })
@@ -232,24 +239,13 @@ describe('Collection', () => {
       assert.strictEqual(docs.length, 0)
     })
 
-    it('should remove all records', async () => {
-      const res = await user.remove({})
+    it('should delete all records', async () => {
+      const res = await user.deleteMany({})
       assert.strictEqual(res, 3)
 
       const docs = await user.find({})
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 0)
-    })
-
-    it('should only remove one record', async () => {
-      const res = await user.remove({}, { single: true })
-      assert.strictEqual(res, 1)
-    })
-
-    it('should not accept multi', () => {
-      assert.throws(() => {
-        user.remove({}, { multi: false })
-      })
     })
   })
 })

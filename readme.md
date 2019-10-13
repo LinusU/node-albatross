@@ -154,9 +154,13 @@ Update documents matching `selector`. Resolves with an object with the following
 - `matched`: Number of documents that matched the query
 - `modified`: Number of documents that was modified
 
-#### `remove(selector[, opts]): Promise<number>`
+#### `deleteOne(filter[, opts]): Promise<number>`
 
-Removes documents specified by `selector`. Resolves with the number of documents removed.
+Deletes a single document matching `filter`. Resolves with the number of documents deleted.
+
+#### `deleteMany(filter[, opts]): Promise<number>`
+
+Deletes multiple documents matching `filter`. Resolves with the number of documents deleted.
 
 ### Grid
 
