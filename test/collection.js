@@ -158,9 +158,9 @@ describe('Collection', () => {
     })
   })
 
-  describe('#update', () => {
+  describe('#updateOne', () => {
     it('should update one record', async () => {
-      const res = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
+      const res = await user.updateOne({ name: 'Linus' }, { $set: { year: 1992 } })
       assert.deepStrictEqual(res, { matched: 1, modified: 1 })
 
       const docs = await user.find({ name: 'Linus' })
@@ -170,8 +170,23 @@ describe('Collection', () => {
       assert.strictEqual(docs[0].year, 1992)
     })
 
+    it('should only update one record', async () => {
+      const res = await user.updateOne({}, { $set: { planet: 'Earth' } })
+      assert.deepStrictEqual(res, { matched: 1, modified: 1 })
+    })
+
+    it('should return number of documents matched & modified', async () => {
+      const first = await user.updateOne({ name: 'Linus' }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(first, { matched: 1, modified: 1 })
+
+      const second = await user.updateOne({ name: 'Linus' }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(second, { matched: 1, modified: 0 })
+    })
+  })
+
+  describe('#updateMany', () => {
     it('should update multiple records', async () => {
-      const res = await user.update({ name: { $ne: 'Linus' } }, { $set: { famous: true } }, { multi: true })
+      const res = await user.updateMany({ name: { $ne: 'Linus' } }, { $set: { famous: true } }, { multi: true })
       assert.deepStrictEqual(res, { matched: 2, modified: 2 })
 
       const docs = await user.find({ name: { $ne: 'Linus' } })
@@ -182,7 +197,7 @@ describe('Collection', () => {
     })
 
     it('should update all records', async () => {
-      const res = await user.update({}, { $set: { planet: 'Earth' } }, { multi: true })
+      const res = await user.updateMany({}, { $set: { planet: 'Earth' } }, { multi: true })
       assert.deepStrictEqual(res, { matched: 3, modified: 3 })
 
       const docs = await user.find({})
@@ -193,23 +208,18 @@ describe('Collection', () => {
       assert.strictEqual(docs[2].planet, 'Earth')
     })
 
-    it('should only update one record', async () => {
-      const res = await user.update({}, { $set: { planet: 'Earth' } })
-      assert.deepStrictEqual(res, { matched: 1, modified: 1 })
-    })
-
-    it('should not accept single', () => {
-      assert.throws(() => {
-        user.update({}, { $set: { planet: 'Earth' } }, { single: true })
-      })
-    })
-
     it('should return number of documents matched & modified', async () => {
-      const first = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
+      const first = await user.updateMany({ name: 'Linus' }, { $set: { year: 1992 } })
       assert.deepStrictEqual(first, { matched: 1, modified: 1 })
 
-      const second = await user.update({ name: 'Linus' }, { $set: { year: 1992 } })
+      const second = await user.updateMany({ name: 'Linus' }, { $set: { year: 1992 } })
       assert.deepStrictEqual(second, { matched: 1, modified: 0 })
+
+      const third = await user.updateMany({ name: { $ne: 'Linus' } }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(third, { matched: 2, modified: 2 })
+
+      const fourth = await user.updateMany({ name: { $ne: 'Linus' } }, { $set: { year: 1992 } })
+      assert.deepStrictEqual(fourth, { matched: 2, modified: 0 })
     })
   })
 
