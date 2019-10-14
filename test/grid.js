@@ -44,7 +44,7 @@ describe('Grid', () => {
       const result = await grid.upload(testStream(), OPTS)
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectID)
+      assert.ok(result.id instanceof albatross.ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
       assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)
@@ -57,7 +57,7 @@ describe('Grid', () => {
       const result = await grid.upload(testStream())
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectID)
+      assert.ok(result.id instanceof albatross.ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
       assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)

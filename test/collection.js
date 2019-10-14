@@ -5,7 +5,7 @@ const crypto = require('crypto')
 const albatross = require('../')
 
 const id = crypto.randomBytes(4).toString('hex')
-const ObjectID = albatross.ObjectID
+const ObjectId = albatross.ObjectId
 
 describe('Collection', () => {
   let db, user, linusId
@@ -17,7 +17,7 @@ describe('Collection', () => {
   })
 
   beforeEach(async () => {
-    linusId = new ObjectID()
+    linusId = new ObjectId()
 
     await user.insert({ name: 'Linus', _id: linusId })
     await user.insert({ name: 'Steve' })

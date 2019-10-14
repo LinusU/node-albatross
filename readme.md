@@ -59,40 +59,16 @@ Creates a new instance of `Albatross` and connect to the specified uri.
 The following functions are exposed on the module:
 
 ```text
-Admin
-AggregationCursor
-BSONRegExp
 Binary
-Chunk
 Code
-Collection
-CommandCursor
-CoreConnection
-CoreServer
-Cursor
 DBRef
-Db
 Decimal128
 Double
-GridFSBucket
-GridStore
 Int32
-Logger
 Long
-Map
 MaxKey
 MinKey
-MongoClient
-MongoError
-MongoNetworkError
-MongoTimeoutError
-Mongos
-ObjectID
 ObjectId
-ReadPreference
-ReplSet
-Server
-Symbol
 Timestamp
 ```
 
@@ -107,9 +83,9 @@ Returns a new instance of Collection bound to the collection named `name`.
 Returns a new instance of Grid, optionally using the supplied `name` as the
 name of the root collection.
 
-#### `.id(strOrObjectID)`
+#### `.id(strOrObjectId)`
 
-Makes sure that the given argument is an ObjectID.
+Makes sure that the given argument is an ObjectId.
 
 #### `.close(): Promise<void>`
 
@@ -117,9 +93,9 @@ Closes the connection to the server.
 
 ### Collection
 
-#### `.id(strOrObjectID)`
+#### `.id(strOrObjectId)`
 
-Makes sure that the given argument is an ObjectID.
+Makes sure that the given argument is an ObjectId.
 
 #### `findOne(query[, opts]): Promise<object>`
 
@@ -171,9 +147,9 @@ Deletes multiple documents matching `filter`. Resolves with the number of docume
 
 ### Grid
 
-#### `id(strOrObjectID)`
+#### `id(strOrObjectId)`
 
-Makes sure that the given argument is an ObjectID.
+Makes sure that the given argument is an ObjectId.
 
 #### `upload(stream[, opts]): Promise<FileInfo>`
 
