@@ -123,6 +123,12 @@ The Promise will resolve with the documents that was inserted. When called
 with an object instead of an array as the first argument, the Promise resolves
 with an object instead of an array as well.
 
+### `findOneAndUpdate(filter, update[, opts]): Promise<object>`
+
+Finds a document and updates it in one atomic operation.
+
+By default, the document _before_ the update is returned. To return the document _after_ the update, pass `returnOriginal: false` in the options.
+
 #### `updateOne(filter, update[, opts]): Promise<UpdateResult>`
 
 Updates a single document matching `filter`. Resolves with an object with the following properties:

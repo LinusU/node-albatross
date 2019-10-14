@@ -163,6 +163,32 @@ describe('Collection', () => {
     })
   })
 
+  describe('#findOneAndUpdate', () => {
+    it('should update one record', async () => {
+      const res = await user.findOneAndUpdate({ name: 'Linus' }, { $set: { year: 1992 } })
+      assert.strictEqual(res.name, 'Linus')
+      assert.strictEqual(res.year, undefined)
+
+      const docs = await user.find({ name: 'Linus' })
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 1)
+      assert.strictEqual(docs[0].name, 'Linus')
+      assert.strictEqual(docs[0].year, 1992)
+    })
+
+    it('should return the updated record', async () => {
+      const res = await user.findOneAndUpdate({ name: 'Linus' }, { $set: { year: 1992 } }, { returnOriginal: false })
+      assert.strictEqual(res.name, 'Linus')
+      assert.strictEqual(res.year, 1992)
+
+      const docs = await user.find({ name: 'Linus' })
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 1)
+      assert.strictEqual(docs[0].name, 'Linus')
+      assert.strictEqual(docs[0].year, 1992)
+    })
+  })
+
   describe('#updateOne', () => {
     it('should update one record', async () => {
       const res = await user.updateOne({ name: 'Linus' }, { $set: { year: 1992 } })
