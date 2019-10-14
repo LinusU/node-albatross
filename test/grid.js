@@ -1,30 +1,33 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var stream = require('stream')
-var crypto = require('crypto')
-var getStream = require('get-stream')
-var albatross = require('../')
+const assert = require('assert')
+const stream = require('stream')
+const crypto = require('crypto')
+const getStream = require('get-stream')
+const albatross = require('../')
 
-var NAME = 'hello.txt'
-var TYPE = 'text/plain'
-var TEST = 'Hello, World!'
-var META = { hello: 'World' }
-var OPTS = { filename: NAME, contentType: TYPE, metadata: META }
+const NAME = 'hello.txt'
+const TYPE = 'text/plain'
+const TEST = 'Hello, World!'
+const META = { hello: 'World' }
+const OPTS = { filename: NAME, contentType: TYPE, metadata: META }
 
 function md5 (str) {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
 function testStream () {
-  var s = new stream.PassThrough()
+  const s = new stream.PassThrough()
   s.end(Buffer.from(TEST))
   return s
 }
 
 describe('Grid', () => {
   describe('#upload', () => {
-    var grid, fileId
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
     before(() => {
       grid = albatross('mongodb://localhost/albatross-test').grid()
@@ -68,7 +71,10 @@ describe('Grid', () => {
   })
 
   describe('#download', () => {
-    var grid, fileId
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
     before(async () => {
       grid = albatross('mongodb://localhost/albatross-test').grid()
@@ -98,7 +104,10 @@ describe('Grid', () => {
   })
 
   describe('#delete', () => {
-    var grid, fileId
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
     before(async () => {
       grid = albatross('mongodb://localhost/albatross-test').grid()

@@ -8,7 +8,12 @@ const id = crypto.randomBytes(4).toString('hex')
 const ObjectId = albatross.ObjectId
 
 describe('Collection', () => {
-  let db, user, linusId
+  /** @type {import('../').Albatross} */
+  let db
+  /** @type {import('../').Collection} */
+  let user
+  /** @type {import('../').ObjectId} */
+  let linusId
 
   before(async () => {
     db = albatross('mongodb://localhost/albatross-test')
@@ -186,7 +191,7 @@ describe('Collection', () => {
 
   describe('#updateMany', () => {
     it('should update multiple records', async () => {
-      const res = await user.updateMany({ name: { $ne: 'Linus' } }, { $set: { famous: true } }, { multi: true })
+      const res = await user.updateMany({ name: { $ne: 'Linus' } }, { $set: { famous: true } })
       assert.deepStrictEqual(res, { matched: 2, modified: 2 })
 
       const docs = await user.find({ name: { $ne: 'Linus' } })
@@ -197,7 +202,7 @@ describe('Collection', () => {
     })
 
     it('should update all records', async () => {
-      const res = await user.updateMany({}, { $set: { planet: 'Earth' } }, { multi: true })
+      const res = await user.updateMany({}, { $set: { planet: 'Earth' } })
       assert.deepStrictEqual(res, { matched: 3, modified: 3 })
 
       const docs = await user.find({})

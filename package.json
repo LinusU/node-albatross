@@ -5,20 +5,26 @@
   "author": "Linus Unnebäck <linus@folkdatorn.se>",
   "repository": "LinusU/node-albatross",
   "files": [
+    "index.d.ts",
     "index.js",
     "lib/"
   ],
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard && mocha && npm run tsc",
+    "tsc": "tsc --noEmit --allowJs --checkJs index.d.ts test/*.js"
   },
   "dependencies": {
     "debug": "^4.1.1",
     "mongodb": "^3.3.2"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/mongodb": "^3.3.6",
+    "@types/node": "^8.10.54",
     "get-stream": "^5.1.0",
     "mocha": "^6.2.1",
-    "standard": "^14.3.1"
+    "standard": "^14.3.1",
+    "typescript": "^3.6.4"
   },
   "engines": {
     "node": ">=8"
