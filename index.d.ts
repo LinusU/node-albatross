@@ -23,6 +23,7 @@ declare namespace albatross {
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
     distinct (key: string, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<any[]>
+    exists (query?: mongodb.FilterQuery<TSchema>): Promise<boolean>
 
     insert (doc: OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<WithId<TSchema>>
     insert (docs: OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<WithId<TSchema>[]>

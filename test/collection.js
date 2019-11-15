@@ -105,6 +105,11 @@ describe('Collection', () => {
   })
 
   describe('#count', () => {
+    it('should count no records', async () => {
+      const res = await user.count({ name: 'Foobar' })
+      assert.strictEqual(res, 0)
+    })
+
     it('should count one record', async () => {
       const res = await user.count({ name: 'Linus' })
       assert.strictEqual(res, 1)
@@ -144,6 +149,28 @@ describe('Collection', () => {
       assert.ok(res.includes('Linus'))
       assert.ok(res.includes('Steve'))
       assert.ok(res.includes('Bob'))
+    })
+  })
+
+  describe('#exists', () => {
+    it('should find no records', async () => {
+      const res = await user.exists({ name: 'Foobar' })
+      assert.strictEqual(res, false)
+    })
+
+    it('should find a record', async () => {
+      const res = await user.exists({ name: 'Linus' })
+      assert.strictEqual(res, true)
+    })
+
+    it('should find multiple records', async () => {
+      const res = await user.exists({ name: { $ne: 'Linus' } })
+      assert.strictEqual(res, true)
+    })
+
+    it('should find all records', async () => {
+      const res = await user.exists({})
+      assert.strictEqual(res, true)
     })
   })
 

@@ -115,6 +115,10 @@ Finds a list of distinct values for the given key.
 
 *note: if you specify `opts` you also need to specify `query`*
 
+#### `exists(query): Promise<boolean>`
+
+Check if at least one document is matching the query.
+
 #### `insert(docs[, opts]): Promise<object | object[]>`
 
 Inserts a single document or a an array of documents.
