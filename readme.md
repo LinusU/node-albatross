@@ -87,6 +87,10 @@ name of the root collection.
 
 Makes sure that the given argument is an ObjectId.
 
+#### `.ping(): Promise<void>`
+
+Send the `ping` command to the server, to check that the connection is still intact.
+
 #### `.close(): Promise<void>`
 
 Closes the connection to the server.

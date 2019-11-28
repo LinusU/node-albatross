@@ -39,4 +39,8 @@ describe('Albatross', function () {
     assert.strictEqual(albatross.ObjectId, mongodb.ObjectId)
     assert.strictEqual(albatross.Timestamp, mongodb.Timestamp)
   })
+
+  it('should ping server', async () => {
+    assert.strictEqual(await db.ping(), undefined)
+  })
 })

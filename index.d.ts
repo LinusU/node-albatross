@@ -60,6 +60,7 @@ declare namespace albatross {
     id (hexString?: mongodb.ObjectId | string): mongodb.ObjectId
     collection<TSchema> (name: string): Collection<TSchema>
     grid (name?: string): Grid
+    ping (): Promise<void>
     close (force?: boolean): Promise<void>
   }
 
