@@ -1,140 +1,130 @@
 /* eslint-env mocha */
 
-var assert = require('assert')
-var stream = require('stream')
-var crypto = require('crypto')
-var concat = require('concat-stream')
-var albatross = require('../')
+const assert = require('assert')
+const stream = require('stream')
+const crypto = require('crypto')
+const getStream = require('get-stream')
+const albatross = require('../')
 
-var NAME = 'hello.txt'
-var TYPE = 'text/plain'
-var TEST = 'Hello, World!'
-var META = { hello: 'World' }
-var OPTS = { filename: NAME, contentType: TYPE, metadata: META }
+const NAME = 'hello.txt'
+const TYPE = 'text/plain'
+const TEST = 'Hello, World!'
+const META = { hello: 'World' }
+const OPTS = { filename: NAME, contentType: TYPE, metadata: META }
 
 function md5 (str) {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
 function testStream () {
-  var s = new stream.PassThrough()
-  s.end(new Buffer(TEST))
+  const s = new stream.PassThrough()
+  s.end(Buffer.from(TEST))
   return s
 }
 
-describe('Grid', function () {
-  describe('#upload', function () {
-    var grid, fileId
+describe('Grid', () => {
+  describe('#upload', () => {
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
-    before(function () {
+    before(() => {
       grid = albatross('mongodb://localhost/albatross-test').grid()
     })
 
-    afterEach(function (done) {
-      if (!fileId) return done()
-      grid.delete(fileId, done)
+    afterEach(async () => {
+      if (!fileId) return
+      await grid.delete(fileId)
       fileId = undefined
     })
 
-    it('should upload a file with options', function (done) {
-      grid.upload(testStream(), OPTS, function (err, result) {
-        assert.ifError(err)
-
-        fileId = result.id
-
-        assert.ok(result.id instanceof albatross.ObjectID)
-        assert.equal(typeof result.chunkSize, 'number')
-        assert.equal(result.md5, md5(TEST))
-        assert.equal(result.length, TEST.length)
-        assert.equal(result.filename, NAME)
-        assert.equal(result.contentType, TYPE)
-        assert.deepEqual(result.metadata, META)
-
-        done()
-      })
+    after(async () => {
+      await grid.parent.close()
     })
 
-    it('should upload a file without options', function (done) {
-      grid.upload(testStream(), function (err, result) {
-        assert.ifError(err)
+    it('should upload a file with options', async () => {
+      const result = await grid.upload(testStream(), OPTS)
+      fileId = result.id
 
-        fileId = result.id
+      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.strictEqual(typeof result.chunkSize, 'number')
+      assert.strictEqual(result.md5, md5(TEST))
+      assert.strictEqual(result.length, TEST.length)
+      assert.strictEqual(result.filename, NAME)
+      assert.strictEqual(result.contentType, TYPE)
+      assert.deepStrictEqual(result.metadata, META)
+    })
 
-        assert.ok(result.id instanceof albatross.ObjectID)
-        assert.equal(typeof result.chunkSize, 'number')
-        assert.equal(result.md5, md5(TEST))
-        assert.equal(result.length, TEST.length)
-        assert.equal(result.filename, '')
-        assert.equal(result.contentType, '')
-        assert.deepEqual(result.metadata, {})
+    it('should upload a file without options', async () => {
+      const result = await grid.upload(testStream())
+      fileId = result.id
 
-        done()
-      })
+      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.strictEqual(typeof result.chunkSize, 'number')
+      assert.strictEqual(result.md5, md5(TEST))
+      assert.strictEqual(result.length, TEST.length)
+      assert.strictEqual(result.filename, '')
+      assert.strictEqual(result.contentType, '')
+      assert.deepStrictEqual(result.metadata, {})
     })
   })
 
-  describe('#download', function () {
-    var grid, fileId
+  describe('#download', () => {
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
-    before(function (done) {
+    before(async () => {
       grid = albatross('mongodb://localhost/albatross-test').grid()
 
-      grid.upload(testStream(), OPTS, function (err, res) {
-        if (err) return done(err)
-
-        fileId = res.id
-        done()
-      })
+      const res = await grid.upload(testStream(), OPTS)
+      fileId = res.id
     })
 
-    after(function (done) {
-      if (!fileId) return done()
-      grid.delete(fileId, done)
+    after(async () => {
+      if (!fileId) return
+      await grid.delete(fileId)
+      await grid.parent.close()
     })
 
-    it('should download a file', function (done) {
-      grid.download(fileId, function (err, result) {
-        assert.ifError(err)
+    it('should download a file', async () => {
+      const result = await grid.download(fileId)
 
-        assert.equal(result.md5, md5(TEST))
-        assert.equal(result.length, TEST.length)
-        assert.equal(typeof result.chunkSize, 'number')
-        assert.equal(result.filename, NAME)
-        assert.equal(result.contentType, TYPE)
-        assert.deepEqual(result.metadata, META)
+      assert.strictEqual(result.md5, md5(TEST))
+      assert.strictEqual(result.length, TEST.length)
+      assert.strictEqual(typeof result.chunkSize, 'number')
+      assert.strictEqual(result.filename, NAME)
+      assert.strictEqual(result.contentType, TYPE)
+      assert.deepStrictEqual(result.metadata, META)
 
-        result.stream.pipe(concat(function (body) {
-          assert.equal(body.toString(), TEST)
-          done()
-        }))
-      })
+      assert.strictEqual(await getStream(result.stream), TEST)
     })
   })
 
-  describe('#delete', function () {
-    var grid, fileId
+  describe('#delete', () => {
+    /** @type {import('../').Grid} */
+    let grid
+    /** @type {import('../').ObjectId} */
+    let fileId
 
-    before(function (done) {
+    before(async () => {
       grid = albatross('mongodb://localhost/albatross-test').grid()
 
-      grid.upload(testStream(), OPTS, function (err, res) {
-        if (err) return done(err)
-
-        fileId = res.id
-        done()
-      })
+      const res = await grid.upload(testStream(), OPTS)
+      fileId = res.id
     })
 
-    it('should delete a file', function (done) {
-      grid.delete(fileId, function (err) {
-        assert.ifError(err)
+    after(async () => {
+      await grid.parent.close()
+    })
 
-        grid.download(fileId, function (err, result) {
-          assert.ifError(err)
-          assert.equal(result, null)
-          done()
-        })
-      })
+    it('should delete a file', async () => {
+      await grid.delete(fileId)
+
+      const result = await grid.download(fileId)
+      assert.strictEqual(result, null)
     })
   })
 })
