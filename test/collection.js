@@ -37,7 +37,7 @@ describe('Collection', () => {
     await db.close()
   })
 
-  describe.only('#aggregate', () => {
+  describe('#aggregate', () => {
     it('should find one record', async () => {
       const docs = await user.aggregate([{ $match: { name: 'Linus' } }])
       assert.ok(docs)
