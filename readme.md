@@ -161,7 +161,7 @@ Deletes multiple documents matching `filter`. Resolves with the number of docume
 
 #### `aggregate(pipeline[, opts]): Promise<object[]>`
 
-Transforms the document according to the multi-stage `pipeline`. Resolves with the aggregated objects.
+Executes an aggregation framework pipeline against the collection. Resolves with the aggregated objects.
 
 ### Grid
 
