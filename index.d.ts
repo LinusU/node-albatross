@@ -36,7 +36,7 @@ declare namespace albatross {
     deleteOne (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions & { bypassDocumentValidation?: boolean }): Promise<0 | 1>
     deleteMany (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions): Promise<number>
 
-    aggregate<T = TSchema> (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<any[]>
+    aggregate<T = TSchema> (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<T[]>
   }
 
   interface FileInfo {
