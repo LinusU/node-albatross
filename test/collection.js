@@ -37,6 +37,31 @@ describe('Collection', () => {
     await db.close()
   })
 
+  describe('#aggregate', () => {
+    it('should find one record', async () => {
+      const docs = await user.aggregate([{ $match: { name: 'Linus' } }])
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 1)
+      assert.strictEqual(docs[0].name, 'Linus')
+    })
+
+    it('should perform some pipeline stages', async () => {
+      const docs = await user.aggregate([
+        { $match: { name: { $ne: 'Linus' } } },
+        { $group: { _id: '$name', total: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+      ])
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 2)
+      assert.strictEqual(docs[0]._id, 'Bob')
+      assert.strictEqual(docs[0].total, 1)
+      assert.strictEqual(docs[1]._id, 'Steve')
+      assert.strictEqual(docs[1].total, 1)
+    })
+  })
+
   describe('#findOne', () => {
     it('should find one record', async () => {
       const doc = await user.findOne({ name: 'Linus' })
