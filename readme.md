@@ -131,6 +131,8 @@ The Promise will resolve with the documents that was inserted. When called
 with an object instead of an array as the first argument, the Promise resolves
 with an object instead of an array as well.
 
+**Note:** Contrary to the standard MongoDB Node.js driver, this function will *not modify* any objects that are passed in. Instead, the returned documents from this function are what was saved in the database.
+
 ### `findOneAndUpdate(filter, update[, opts]): Promise<object>`
 
 Finds a document and updates it in one atomic operation.

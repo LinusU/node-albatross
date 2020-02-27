@@ -213,6 +213,32 @@ describe('Collection', () => {
       assert.strictEqual(docs[0].test, 'foo')
       assert.strictEqual(docs[1].test, 'bar')
     })
+
+    it('should give inserted document', async () => {
+      const a = { test: 'foo' }
+      const b = await user.insert(a)
+
+      // @ts-ignore
+      assert(a !== b)
+
+      assert(a._id == null)
+      assert(b._id != null)
+    })
+
+    it('should give inserted documents', async () => {
+      const a = [{ test: 'foo' }, { test: 'bar' }]
+      const b = await user.insert(a)
+
+      // @ts-ignore
+      assert(a !== b)
+
+      assert(a[0] !== b[0])
+      assert(a[1] !== b[1])
+      assert(a[0]._id == null)
+      assert(b[0]._id != null)
+      assert(a[1]._id == null)
+      assert(b[1]._id != null)
+    })
   })
 
   describe('#findOneAndUpdate', () => {
