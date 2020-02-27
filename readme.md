@@ -54,6 +54,8 @@ also exposes the BSON Binary API on this function.
 
 Creates a new instance of `Albatross` and connect to the specified uri.
 
+**Note:** Albatross creates the MongoDB client with `ignoreUndefined: true`, which means that `undefined` values will not be stored in the database. This is the new default in the BSON library, and is also how the standard `JSON.stringify` works.
+
 #### BSON Binary API
 
 The following functions are exposed on the module:
