@@ -54,6 +54,8 @@ also exposes the BSON Binary API on this function.
 
 Creates a new instance of `Albatross` and connect to the specified uri.
 
+**Note:** Albatross creates the MongoDB client with `ignoreUndefined: true`, which means that `undefined` values will not be stored in the database. This is the new default in the BSON library, and is also how the standard `JSON.stringify` works.
+
 #### BSON Binary API
 
 The following functions are exposed on the module:
@@ -130,6 +132,8 @@ Inserts a single document or a an array of documents.
 The Promise will resolve with the documents that was inserted. When called
 with an object instead of an array as the first argument, the Promise resolves
 with an object instead of an array as well.
+
+**Note:** Contrary to the standard MongoDB Node.js driver, this function will *not modify* any objects that are passed in. Instead, the returned documents from this function are what was saved in the database.
 
 ### `findOneAndUpdate(filter, update[, opts]): Promise<object>`
 
