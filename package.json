@@ -14,14 +14,14 @@
     "tsc": "tsc --noEmit --allowJs --checkJs index.d.ts test/*.js"
   },
   "dependencies": {
+    "@types/bson": "1.0.11",
+    "@types/mongodb": "3.5.20",
     "bson": "^1.1.1",
     "debug": "^4.1.1",
     "mongodb": "^3.5.4"
   },
   "devDependencies": {
-    "@types/bson": "^1.0.11",
     "@types/mocha": "^5.2.7",
-    "@types/mongodb": "^3.3.12",
     "@types/node": "^8.10.54",
     "assert-rejects": "^1.0.0",
     "get-stream": "^5.1.0",
