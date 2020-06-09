@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@types/bson": "1.0.11",
-    "@types/mongodb": "3.5.20",
+    "@types/mongodb": "3.5.10",
     "bson": "^1.1.1",
     "debug": "^4.1.1",
     "mongodb": "^3.5.4"
