@@ -8,6 +8,7 @@ type ExtractIdType<TSchema> = TSchema extends { _id: infer U }
       : U
   : mongodb.ObjectId
 
+type FlattenIfArray<T> = T extends Array<infer R> ? R : T
 type OptionalId<TSchema> = Omit<TSchema, '_id'> & { _id?: any }
 type WithId<TSchema> = Omit<TSchema, '_id'> & { _id: ExtractIdType<TSchema> }
 
@@ -23,7 +24,7 @@ declare namespace albatross {
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
-    distinct<Key extends keyof WithId<TSchema>> (key: Key, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<Array<WithId<TSchema>[Key]>>
+    distinct<Key extends keyof WithId<TSchema>> (key: Key, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<Array<FlattenIfArray<WithId<TSchema>[Key]>>>
     distinct (key: string, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<any[]>
 
     exists (query?: mongodb.FilterQuery<TSchema>): Promise<boolean>
