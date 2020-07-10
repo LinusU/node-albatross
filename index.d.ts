@@ -1,16 +1,6 @@
 import * as mongodb from 'mongodb'
 
-type ExtractIdType<TSchema> = TSchema extends { _id: infer U }
-  ? {} extends U
-    ? Exclude<U, {}>
-    : unknown extends U
-      ? mongodb.ObjectId
-      : U
-  : mongodb.ObjectId
-
 type FlattenIfArray<T> = T extends Array<infer R> ? R : T
-type OptionalId<TSchema> = Omit<TSchema, '_id'> & { _id?: any }
-type WithId<TSchema> = Omit<TSchema, '_id'> & { _id: ExtractIdType<TSchema> }
 
 declare function albatross (uri: string): albatross.Albatross
 
@@ -24,13 +14,13 @@ declare namespace albatross {
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
-    distinct<Key extends keyof WithId<TSchema>> (key: Key, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<Array<FlattenIfArray<WithId<TSchema>[Key]>>>
+    distinct<Key extends keyof mongodb.WithId<TSchema>> (key: Key, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<Array<FlattenIfArray<mongodb.WithId<TSchema>[Key]>>>
     distinct (key: string, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<any[]>
 
     exists (query?: mongodb.FilterQuery<TSchema>): Promise<boolean>
 
-    insert (doc: OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<WithId<TSchema>>
-    insert (docs: OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<WithId<TSchema>[]>
+    insert (doc: mongodb.OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<mongodb.WithId<TSchema>>
+    insert (docs: mongodb.OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<mongodb.WithId<TSchema>[]>
 
     findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption & { returnOriginal: false, upsert: true }): Promise<TSchema>
     findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption): Promise<TSchema | null>
