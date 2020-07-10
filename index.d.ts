@@ -32,6 +32,7 @@ declare namespace albatross {
     insert (doc: OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<WithId<TSchema>>
     insert (docs: OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<WithId<TSchema>[]>
 
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption & { returnOriginal: false, upsert: true }): Promise<TSchema>
     findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption): Promise<TSchema | null>
 
     updateOne (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOneOptions): Promise<{ matched: 0 | 1, modified: 0 | 1 }>
