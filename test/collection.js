@@ -265,6 +265,25 @@ describe('Collection', () => {
       assert.strictEqual(docs[0].name, 'Linus')
       assert.strictEqual(docs[0].year, 1992)
     })
+
+    it('should return the upserted record', async () => {
+      const id = user.id()
+
+      assert.deepStrictEqual(
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 1 } }, { returnOriginal: false, upsert: true }),
+        { _id: id, a: 1, b: 1 }
+      )
+
+      assert.deepStrictEqual(
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 2 } }, { returnOriginal: false, upsert: true }),
+        { _id: id, a: 2, b: 1 }
+      )
+
+      assert.deepStrictEqual(
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 3 } }, { returnOriginal: false, upsert: true }),
+        { _id: id, a: 3, b: 1 }
+      )
+    })
   })
 
   describe('#updateOne', () => {
