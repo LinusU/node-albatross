@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 const assert = require('assert')
+const assertRejects = require('assert-rejects')
 const mongodb = require('mongodb')
 const albatross = require('../')
 
@@ -42,5 +43,20 @@ describe('Albatross', function () {
 
   it('should ping server', async () => {
     assert.strictEqual(await db.ping(), undefined)
+  })
+
+  it('should ping server with timeout', async () => {
+    assert.strictEqual(await db.ping(500), undefined)
+  })
+
+  it('should timeout when pinging server', async () => {
+    async function ping () {
+      // Because of how Node.js schedules things, the ping can complete before
+      // a setTimeout(..., 0) call when running against a local MongoDB instance.
+      // Running a few times makes sure that one of them should time out.
+      for (let i = 0; i < 100; i++) await db.ping(0)
+    }
+
+    await assertRejects(ping(), /Timeout reached while waiting for ping/)
   })
 })
