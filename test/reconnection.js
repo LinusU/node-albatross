@@ -35,6 +35,7 @@ describe('Reconnection', function () {
     const db = albatross('test://foo')
 
     let pingOk = true
+    let closeCalled = 0
     let connectCalled = 0
 
     class FakeDb {
@@ -45,25 +46,32 @@ describe('Reconnection', function () {
       constructor () { connectCalled += 1 }
       isConnected () { return true }
       db () { return new FakeDb() }
+      async close () { closeCalled += 1 }
     }
 
     MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
 
+    assert.strictEqual(closeCalled, 0)
     assert.strictEqual(connectCalled, 0)
     await db.ping()
+    assert.strictEqual(closeCalled, 0)
     assert.strictEqual(connectCalled, 1)
 
     pingOk = false
 
+    assert.strictEqual(closeCalled, 0)
     assert.strictEqual(connectCalled, 1)
     await assertRejects(db.ping(), 'test')
+    assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 1)
 
     pingOk = true
 
+    assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 1)
     MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
     await db.ping()
+    assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 2)
   })
 
@@ -80,6 +88,7 @@ describe('Reconnection', function () {
     class FakeClient {
       isConnected () { return networkUp }
       db () { return new FakeDb() }
+      async close () {}
     }
 
     MongoClient.connect = () => {
