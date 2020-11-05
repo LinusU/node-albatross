@@ -24,9 +24,9 @@ describe('Collection', () => {
   beforeEach(async () => {
     linusId = new ObjectId()
 
-    await user.insert({ name: 'Linus', _id: linusId })
-    await user.insert({ name: 'Steve' })
-    await user.insert({ name: 'Bob' })
+    await user.insert({ name: 'Linus', fruits: ['Apple', 'Avocado'], _id: linusId })
+    await user.insert({ name: 'Steve', fruits: ['Apple', 'Pear'] })
+    await user.insert({ name: 'Bob', fruits: ['Strawberries'] })
   })
 
   afterEach(async () => {
@@ -174,6 +174,32 @@ describe('Collection', () => {
       assert.ok(res.includes('Linus'))
       assert.ok(res.includes('Steve'))
       assert.ok(res.includes('Bob'))
+    })
+
+    it('should find all distinct fruits', async () => {
+      const res = await user.distinct('fruits')
+      assert.ok(Array.isArray(res))
+      assert.strictEqual(res.length, 4)
+      assert.ok(res.includes('Apple'))
+      assert.ok(res.includes('Avocado'))
+      assert.ok(res.includes('Pear'))
+      assert.ok(res.includes('Strawberries'))
+    })
+
+    it('should find some distinct fruits', async () => {
+      const res = await user.distinct('fruits', { fruits: 'Apple' })
+      assert.ok(Array.isArray(res))
+      assert.strictEqual(res.length, 3)
+      assert.ok(res.includes('Apple'))
+      assert.ok(res.includes('Avocado'))
+      assert.ok(res.includes('Pear'))
+    })
+
+    it('should find one distinct fruit', async () => {
+      const res = await user.distinct('fruits', { fruits: 'Strawberries' })
+      assert.ok(Array.isArray(res))
+      assert.strictEqual(res.length, 1)
+      assert.ok(res.includes('Strawberries'))
     })
   })
 
