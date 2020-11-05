@@ -89,9 +89,11 @@ name of the root collection.
 
 Makes sure that the given argument is an ObjectId.
 
-#### `.ping(): Promise<void>`
+#### `.ping([timeout]): Promise<void>`
 
 Send the `ping` command to the server, to check that the connection is still intact.
+
+Optionally accepts a timeout in milliseconds.
 
 #### `.close(): Promise<void>`
 
