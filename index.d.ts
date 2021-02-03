@@ -9,8 +9,8 @@ declare namespace albatross {
     readonly parent: Albatross
     id (hexString?: mongodb.ObjectId | string): mongodb.ObjectId
 
-    findOne<T = TSchema> (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions): Promise<T | null>
-    find<T = TSchema> (query: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions): Promise<T[]>
+    findOne<T = TSchema> (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions<TSchema>): Promise<T | null>
+    find<T = TSchema> (query: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions<TSchema>): Promise<T[]>
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
@@ -22,8 +22,8 @@ declare namespace albatross {
     insert (doc: mongodb.OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<mongodb.WithId<TSchema>>
     insert (docs: mongodb.OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<mongodb.WithId<TSchema>[]>
 
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption & { returnOriginal: false, upsert: true }): Promise<TSchema>
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption): Promise<TSchema | null>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }): Promise<TSchema>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption<TSchema>): Promise<TSchema | null>
 
     updateOne (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOneOptions): Promise<{ matched: 0 | 1, modified: 0 | 1 }>
     updateMany (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateManyOptions): Promise<{ matched: number, modified: number }>
