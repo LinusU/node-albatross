@@ -1,16 +1,21 @@
 import * as mongodb from 'mongodb'
 
 type FlattenIfArray<T> = T extends Array<infer R> ? R : T
+type WithoutProjection<T> = T & { fields?: undefined, projection?: undefined }
+type WithProjection<T extends { projection?: any }> = T & { projection: NonNullable<T['projection']> }
 
 declare function albatross (uri: string): albatross.Albatross
 
 declare namespace albatross {
-  interface Collection<TSchema = any> {
+  interface Collection<TSchema> {
     readonly parent: Albatross
     id (hexString?: mongodb.ObjectId | string): mongodb.ObjectId
 
-    findOne<T = TSchema> (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions<TSchema>): Promise<T | null>
-    find<T = TSchema> (query: mongodb.FilterQuery<TSchema>, options?: mongodb.FindOneOptions<TSchema>): Promise<T[]>
+    findOne (filter: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<mongodb.FindOneOptions<TSchema>>): Promise<TSchema | null>
+    findOne (filter: mongodb.FilterQuery<TSchema>, options: WithProjection<mongodb.FindOneOptions<TSchema>>): Promise<object | null>
+
+    find (query: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<mongodb.FindOneOptions<TSchema>>): Promise<TSchema[]>
+    find (query: mongodb.FilterQuery<TSchema>, options: WithProjection<mongodb.FindOneOptions<TSchema>>): Promise<object[]>
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
@@ -22,8 +27,11 @@ declare namespace albatross {
     insert (doc: mongodb.OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<mongodb.WithId<TSchema>>
     insert (docs: mongodb.OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<mongodb.WithId<TSchema>[]>
 
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }): Promise<TSchema>
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption<TSchema>): Promise<TSchema | null>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: WithoutProjection<mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }>): Promise<TSchema>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: WithoutProjection<mongodb.FindOneAndUpdateOption<TSchema>>): Promise<TSchema | null>
+
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: WithProjection<mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }>): Promise<object>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: WithProjection<mongodb.FindOneAndUpdateOption<TSchema>>): Promise<object | null>
 
     updateOne (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOneOptions): Promise<{ matched: 0 | 1, modified: 0 | 1 }>
     updateMany (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateManyOptions): Promise<{ matched: number, modified: number }>
@@ -31,7 +39,7 @@ declare namespace albatross {
     deleteOne (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions & { bypassDocumentValidation?: boolean }): Promise<0 | 1>
     deleteMany (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions): Promise<number>
 
-    aggregate<T = TSchema> (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<T[]>
+    aggregate (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<object[]>
   }
 
   interface FileInfo {
