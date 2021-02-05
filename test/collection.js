@@ -7,10 +7,20 @@ const albatross = require('../')
 const id = crypto.randomBytes(4).toString('hex')
 const ObjectId = albatross.ObjectId
 
+/**
+ * @typedef {Object} User
+ * @property {import('bson').ObjectId} _id
+ * @property {boolean} [famous]
+ * @property {string[]} [fruits]
+ * @property {string} name
+ * @property {string} [planet]
+ * @property {number} [year]
+ */
+
 describe('Collection', () => {
   /** @type {import('../').Albatross} */
   let db
-  /** @type {import('../').Collection} */
+  /** @type {import('../').Collection<User>} */
   let user
   /** @type {import('../').ObjectId} */
   let linusId
@@ -39,7 +49,7 @@ describe('Collection', () => {
 
   describe('#aggregate', () => {
     it('should find one record', async () => {
-      const docs = await user.aggregate([{ $match: { name: 'Linus' } }])
+      const docs = /** @type {User[]} */ (await user.aggregate([{ $match: { name: 'Linus' } }]))
       assert.ok(docs)
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 1)
@@ -47,11 +57,11 @@ describe('Collection', () => {
     })
 
     it('should perform some pipeline stages', async () => {
-      const docs = await user.aggregate([
+      const docs = /** @type {{ _id: string, total: number }[]} */ (await user.aggregate([
         { $match: { name: { $ne: 'Linus' } } },
         { $group: { _id: '$name', total: { $sum: 1 } } },
         { $sort: { _id: 1 } }
-      ])
+      ]))
       assert.ok(docs)
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 2)
@@ -227,21 +237,21 @@ describe('Collection', () => {
 
   describe('#insert', () => {
     it('should insert a single document', async () => {
-      const doc = await user.insert({ test: 'foo' })
+      const doc = await user.insert({ name: 'foo' })
       assert.ok(doc)
-      assert.strictEqual(doc.test, 'foo')
+      assert.strictEqual(doc.name, 'foo')
     })
 
     it('should insert multiple documents', async () => {
-      const docs = await user.insert([{ test: 'foo' }, { test: 'bar' }])
+      const docs = await user.insert([{ name: 'foo' }, { name: 'bar' }])
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 2)
-      assert.strictEqual(docs[0].test, 'foo')
-      assert.strictEqual(docs[1].test, 'bar')
+      assert.strictEqual(docs[0].name, 'foo')
+      assert.strictEqual(docs[1].name, 'bar')
     })
 
     it('should give inserted document', async () => {
-      const a = { test: 'foo' }
+      const a = { name: 'foo' }
       const b = await user.insert(a)
 
       // @ts-ignore
@@ -252,7 +262,7 @@ describe('Collection', () => {
     })
 
     it('should give inserted documents', async () => {
-      const a = [{ test: 'foo' }, { test: 'bar' }]
+      const a = [{ name: 'foo' }, { name: 'bar' }]
       const b = await user.insert(a)
 
       // @ts-ignore
