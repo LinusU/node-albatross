@@ -1,8 +1,7 @@
 import * as mongodb from 'mongodb'
 
 type FlattenIfArray<T> = T extends Array<infer R> ? R : T
-type RequiredProjection<T extends { projection?: any }> = T & { projection: NonNullable<T['projection']> }
-type SpecificProjection<T extends { projection?: any }, TProjection> = Omit<T, 'projection'> & { projection: TProjection }
+type SpecificProjection<T, TProjection> = Omit<T, 'projection'> & { projection: TProjection }
 type WithoutProjection<T> = T & { fields?: undefined, projection?: undefined }
 
 declare function albatross (uri: string): albatross.Albatross
@@ -15,12 +14,12 @@ declare namespace albatross {
     findOne (filter: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<mongodb.FindOneOptions<TSchema>>): Promise<TSchema | null>
     findOne<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, options: SpecificProjection<mongodb.FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey> | null>
     findOne<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, options: SpecificProjection<mongodb.FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey> | null>
-    findOne (filter: mongodb.FilterQuery<TSchema>, options: RequiredProjection<mongodb.FindOneOptions<TSchema>>): Promise<object | null>
+    findOne (filter: mongodb.FilterQuery<TSchema>, options: mongodb.FindOneOptions<TSchema>): Promise<object | null>
 
     find (query: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<mongodb.FindOneOptions<TSchema>>): Promise<TSchema[]>
     find<TKey extends keyof TSchema> (query: mongodb.FilterQuery<TSchema>, options: SpecificProjection<mongodb.FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Array<Pick<TSchema, TKey>>>
     find<TKey extends keyof TSchema> (query: mongodb.FilterQuery<TSchema>, options: SpecificProjection<mongodb.FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Array<Pick<TSchema, '_id' | TKey>>>
-    find (query: mongodb.FilterQuery<TSchema>, options: RequiredProjection<mongodb.FindOneOptions<TSchema>>): Promise<object[]>
+    find (query: mongodb.FilterQuery<TSchema>, options: mongodb.FindOneOptions<TSchema>): Promise<object[]>
 
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
@@ -41,8 +40,8 @@ declare namespace albatross {
     findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey>>
     findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOption<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey> | null>
 
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: RequiredProjection<mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }>): Promise<object>
-    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: RequiredProjection<mongodb.FindOneAndUpdateOption<TSchema>>): Promise<object | null>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }): Promise<object>
+    findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOption<TSchema>): Promise<object | null>
 
     updateOne (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOneOptions): Promise<{ matched: 0 | 1, modified: 0 | 1 }>
     updateMany (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: mongodb.UpdateManyOptions): Promise<{ matched: number, modified: number }>
