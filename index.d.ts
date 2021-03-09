@@ -82,6 +82,7 @@ declare namespace albatross {
     collection<TSchema extends { _id: any }> (name: string): Collection<TSchema>
     grid (name?: string): Grid
     ping (timeout?: number): Promise<void>
+    transaction<T> (fn: (session: mongodb.ClientSession) => PromiseLike<T>): Promise<T>
     close (force?: boolean): Promise<void>
   }
 

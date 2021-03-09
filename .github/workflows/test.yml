@@ -22,6 +22,7 @@ jobs:
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.6.0
       with:
+        mongodb-replica-set: test
         mongodb-version: ${{ matrix.mongodb }}
     - name: Install dependencies
       run: npm install
