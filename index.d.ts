@@ -1,5 +1,11 @@
 import * as mongodb from 'mongodb'
 
+type DeepReadonly<T> = T extends Date | RegExp | string | number | boolean | bigint | symbol | undefined | null
+  ? T
+  : T extends {}
+  ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+  : Readonly<T>
+
 type FlattenIfArray<T> = T extends Array<infer R> ? R : T
 type SpecificProjection<T, TProjection> = Omit<T, 'projection'> & { projection: TProjection }
 type WithoutProjection<T> = T & { fields?: undefined, projection?: undefined }
@@ -28,8 +34,8 @@ declare namespace albatross {
 
     exists (query?: mongodb.FilterQuery<TSchema>): Promise<boolean>
 
-    insert (doc: mongodb.OptionalId<TSchema>, options?: mongodb.CollectionInsertOneOptions): Promise<mongodb.WithId<TSchema>>
-    insert (docs: mongodb.OptionalId<TSchema>[], options?: mongodb.CollectionInsertManyOptions): Promise<mongodb.WithId<TSchema>[]>
+    insert (doc: DeepReadonly<mongodb.OptionalId<TSchema>>, options?: mongodb.CollectionInsertOneOptions): Promise<mongodb.WithId<TSchema>>
+    insert (docs: DeepReadonly<mongodb.OptionalId<TSchema>>[], options?: mongodb.CollectionInsertManyOptions): Promise<mongodb.WithId<TSchema>[]>
 
     findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options: WithoutProjection<mongodb.FindOneAndUpdateOption<TSchema> & { returnOriginal: false, upsert: true }>): Promise<TSchema>
     findOneAndUpdate (filter: mongodb.FilterQuery<TSchema>, update: mongodb.UpdateQuery<TSchema> | Partial<TSchema>, options?: WithoutProjection<mongodb.FindOneAndUpdateOption<TSchema>>): Promise<TSchema | null>
