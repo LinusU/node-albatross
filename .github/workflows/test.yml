@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node: [12.20.0, 14.13.1, 16.0.0]
-        mongodb: [4.4]
+        mongodb: [4.4, 6.0]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.6.0
+      uses: supercharge/mongodb-github-action@1.8.0
       with:
         mongodb-replica-set: test
         mongodb-version: ${{ matrix.mongodb }}

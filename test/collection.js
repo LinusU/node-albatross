@@ -10,6 +10,8 @@ const id = crypto.randomBytes(4).toString('hex')
 /**
  * @typedef {Object} User
  * @property {import('bson').ObjectId} _id
+ * @property {number} [a]
+ * @property {number} [b]
  * @property {boolean} [famous]
  * @property {string[]} [fruits]
  * @property {string} name
@@ -291,7 +293,7 @@ describe('Collection', () => {
     })
 
     it('should return the updated record', async () => {
-      const res = await user.findOneAndUpdate({ name: 'Linus' }, { $set: { year: 1992 } }, { returnOriginal: false })
+      const res = await user.findOneAndUpdate({ name: 'Linus' }, { $set: { year: 1992 } }, { returnDocument: 'after' })
       assert.strictEqual(res.name, 'Linus')
       assert.strictEqual(res.year, 1992)
 
@@ -306,17 +308,17 @@ describe('Collection', () => {
       const id = user.id()
 
       assert.deepStrictEqual(
-        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 1 } }, { returnOriginal: false, upsert: true }),
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 1 } }, { returnDocument: 'after', upsert: true }),
         { _id: id, a: 1, b: 1 }
       )
 
       assert.deepStrictEqual(
-        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 2 } }, { returnOriginal: false, upsert: true }),
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 2 } }, { returnDocument: 'after', upsert: true }),
         { _id: id, a: 2, b: 1 }
       )
 
       assert.deepStrictEqual(
-        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 3 } }, { returnOriginal: false, upsert: true }),
+        await user.findOneAndUpdate({ _id: id }, { $inc: { a: 1 }, $setOnInsert: { b: 3 } }, { returnDocument: 'after', upsert: true }),
         { _id: id, a: 3, b: 1 }
       )
     })

@@ -153,7 +153,7 @@ The Promise will resolve with the documents that was inserted. When called with 
 
 Finds a document and updates it in one atomic operation.
 
-By default, the document _before_ the update is returned. To return the document _after_ the update, pass `returnOriginal: false` in the options.
+By default, the document _before_ the update is returned. To return the document _after_ the update, pass `returnDocument: 'after'` in the options.
 
 #### `updateOne(filter, update[, opts]): Promise<UpdateResult>`
 
@@ -200,7 +200,6 @@ Store the `stream` as a file in the grid store, `opts` is a object with the foll
 The `FileInfo` object has the following properties:
 
 - `id`: The id of the file
-- `md5`: The md5 hash of the file
 - `length`: The length of the file
 - `chunkSize`: The size of each chunk in bytes
 - `filename`: The value of the `filename` key in the files doc
@@ -212,7 +211,6 @@ The `FileInfo` object has the following properties:
 Get the file with the specified `id` from the grid store. The Promise will resolve with an object with the following properties. If no file with the indicated `id` was found, the Promise will resolve to `null`.
 
 - `id`: The id of the file
-- `md5`: The md5 hash of the file
 - `length`: The length of the file
 - `chunkSize`: The size of each chunk in bytes
 - `filename`: The value of the `filename` key in the files doc

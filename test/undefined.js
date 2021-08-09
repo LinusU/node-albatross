@@ -66,7 +66,7 @@ describe('Undefined', () => {
   it('#findOneAndUpdate should handle undefined', async () => {
     const inserted = await collection.insert({ a: 1, b: 2, c: 3 })
 
-    const updated = await collection.findOneAndUpdate({ _id: inserted._id }, { $set: { a: undefined, b: null, c: 5 } }, { returnOriginal: false })
+    const updated = await collection.findOneAndUpdate({ _id: inserted._id }, { $set: { a: undefined, b: null, c: 5 } }, { returnDocument: 'after' })
     assert.deepStrictEqual(updated, { _id: updated._id, a: 1, b: null, c: 5 })
 
     const fetched = await collection.findOne({ _id: inserted._id })
