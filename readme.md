@@ -1,8 +1,6 @@
 # ![Albatross](/header.png?raw=true "Albatross")
 
-Albatross is a small library that makes accessing MongoDB from Node.js a
-breeze. It's goal is to be a thin wrapper that enables you to forget about
-connection state and get right to accessing your data.
+Albatross is a small library that makes accessing MongoDB from Node.js a breeze. It's goal is to be a thin wrapper that enables you to forget about connection state and get right to accessing your data.
 
 ## Installation
 
@@ -13,7 +11,8 @@ npm install --save albatross
 ## Usage
 
 ```js
-const albatross = require('albatross')
+import albatross from 'albatross'
+import fs from 'node:fs'
 
 const db = albatross('mongodb://localhost/test')
 const user = db.collection('user')
@@ -25,7 +24,6 @@ const doc = await user.findOne({ born: 1992 })
 console.log('Hello ' + doc.name)
 //=> Hello Linus
 
-const fs = require('fs')
 const grid = db.grid()
 
 const input = fs.createReadStream('readme.md')
@@ -40,15 +38,13 @@ result.contentType // 'text/plain'
 result.stream.pipe(process.stdout)
 ```
 
-You can start querying the database right away, as soon as a connection is
-established it will start sending your commands to the server.
+You can start querying the database right away, as soon as a connection is established it will start sending your commands to the server.
 
 ## API
 
 ### Module
 
-The module exposes a single function to create a new `Albatross` instance. It
-also exposes the BSON Binary API on this function.
+The module default exports a single function to create a new `Albatross` instance. It also exports the BSON Binary API as named exports.
 
 #### `albatross(uri)`
 
@@ -58,12 +54,11 @@ Creates a new instance of `Albatross` and connect to the specified uri.
 
 #### BSON Binary API
 
-The following functions are exposed on the module:
+The following functions are exported from the module:
 
 ```text
 Binary
 Code
-DBRef
 Decimal128
 Double
 Int32
@@ -82,8 +77,7 @@ Returns a new instance of Collection bound to the collection named `name`.
 
 #### `.grid([name])`
 
-Returns a new instance of Grid, optionally using the supplied `name` as the
-name of the root collection.
+Returns a new instance of Grid, optionally using the supplied `name` as the name of the root collection.
 
 #### `.id(strOrObjectId)`
 
@@ -151,9 +145,7 @@ Check if at least one document is matching the query.
 
 Inserts a single document or a an array of documents.
 
-The Promise will resolve with the documents that was inserted. When called
-with an object instead of an array as the first argument, the Promise resolves
-with an object instead of an array as well.
+The Promise will resolve with the documents that was inserted. When called with an object instead of an array as the first argument, the Promise resolves with an object instead of an array as well.
 
 **Note:** Contrary to the standard MongoDB Node.js driver, this function will *not modify* any objects that are passed in. Instead, the returned documents from this function are what was saved in the database.
 
@@ -197,8 +189,7 @@ Makes sure that the given argument is an ObjectId.
 
 #### `upload(stream[, opts]): Promise<FileInfo>`
 
-Store the `stream` as a file in the grid store, `opts` is a object with the
-following properties. All options are optionally.
+Store the `stream` as a file in the grid store, `opts` is a object with the following properties. All options are optionally.
 
 - `filename`: The value of the `filename` key in the files doc
 - `chunkSizeBytes`: Overwrite this bucket's `chunkSizeBytes` for this file
@@ -218,9 +209,7 @@ The `FileInfo` object has the following properties:
 
 #### `download(id): Promise<FileInfo>`
 
-Get the file with the specified `id` from the grid store. The Promise will
-resolve with an object with the following properties. If no file with the
-indicated `id` was found, the Promise will resolve to `null`.
+Get the file with the specified `id` from the grid store. The Promise will resolve with an object with the following properties. If no file with the indicated `id` was found, the Promise will resolve to `null`.
 
 - `id`: The id of the file
 - `md5`: The md5 hash of the file
@@ -237,13 +226,11 @@ Delete the file with the specified `id` from the grid store.
 
 ## In depth documentation
 
-For more in depth documentation please see the [mongodb module](http://mongodb.github.io/node-mongodb-native/)
-which Albatross wraps, especially the [Collection object](http://mongodb.github.io/node-mongodb-native/api-generated/collection.html).
+For more in depth documentation please see the [mongodb module](http://mongodb.github.io/node-mongodb-native/) which Albatross wraps, especially the [Collection object](http://mongodb.github.io/node-mongodb-native/api-generated/collection.html).
 
 ## Contributing
 
-Pull requests are always welcome, please make sure to add tests and run
-`mocha` before submitting.
+Pull requests are always welcome, please make sure to add tests and run `mocha` before submitting.
 
 The tests requiers a MongoDB server running at `localhost`.
 

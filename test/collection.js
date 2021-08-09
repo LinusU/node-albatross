@@ -1,11 +1,11 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const crypto = require('crypto')
-const albatross = require('../')
+import assert from 'node:assert'
+import crypto from 'node:crypto'
+
+import albatross, { ObjectId } from '../index.js'
 
 const id = crypto.randomBytes(4).toString('hex')
-const ObjectId = albatross.ObjectId
 
 /**
  * @typedef {Object} User

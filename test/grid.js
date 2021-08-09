@@ -1,10 +1,11 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const stream = require('stream')
-const crypto = require('crypto')
-const getStream = require('get-stream')
-const albatross = require('../')
+import assert from 'node:assert'
+import crypto from 'node:crypto'
+import stream from 'node:stream'
+import getStream from 'get-stream'
+
+import albatross, { ObjectId } from '../index.js'
 
 const NAME = 'hello.txt'
 const TYPE = 'text/plain'
@@ -47,7 +48,7 @@ describe('Grid', () => {
       const result = await grid.upload(testStream(), OPTS)
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.ok(result.id instanceof ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
       assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)
@@ -60,7 +61,7 @@ describe('Grid', () => {
       const result = await grid.upload(testStream())
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.ok(result.id instanceof ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
       assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)

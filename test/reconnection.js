@@ -1,15 +1,15 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const assertRejects = require('assert-rejects')
-const { MongoClient } = require('mongodb')
-const albatross = require('../')
+import assert from 'node:assert'
+import mongodb from 'mongodb'
 
-const originalConnect = MongoClient.connect
+import albatross from '../index.js'
+
+const originalConnect = mongodb.MongoClient.connect
 
 describe('Reconnection', function () {
   afterEach(() => {
-    MongoClient.connect = originalConnect
+    mongodb.MongoClient.connect = originalConnect
   })
 
   it('should reconnect when first connection fails', async () => {
@@ -24,10 +24,10 @@ describe('Reconnection', function () {
       db () { return new FakeDb() }
     }
 
-    MongoClient.connect = () => Promise.reject(new Error('test'))
-    await assertRejects(db.ping(), 'test')
+    mongodb.MongoClient.connect = () => Promise.reject(new Error('test'))
+    await assert.rejects(db.ping(), /test/)
 
-    MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
+    mongodb.MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
     await db.ping()
   })
 
@@ -49,7 +49,7 @@ describe('Reconnection', function () {
       async close () { closeCalled += 1 }
     }
 
-    MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
+    mongodb.MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
 
     assert.strictEqual(closeCalled, 0)
     assert.strictEqual(connectCalled, 0)
@@ -61,7 +61,7 @@ describe('Reconnection', function () {
 
     assert.strictEqual(closeCalled, 0)
     assert.strictEqual(connectCalled, 1)
-    await assertRejects(db.ping(), 'test')
+    await assert.rejects(db.ping(), /test/)
     assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 1)
 
@@ -69,7 +69,7 @@ describe('Reconnection', function () {
 
     assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 1)
-    MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
+    mongodb.MongoClient.connect = () => Promise.resolve(/** @type {any} */ (new FakeClient()))
     await db.ping()
     assert.strictEqual(closeCalled, 1)
     assert.strictEqual(connectCalled, 2)
@@ -91,7 +91,7 @@ describe('Reconnection', function () {
       async close () {}
     }
 
-    MongoClient.connect = () => {
+    mongodb.MongoClient.connect = () => {
       connectCalled += 1
       if (!networkUp) return Promise.reject(new Error('test'))
       return Promise.resolve(/** @type {any} */ (new FakeClient()))
@@ -108,11 +108,11 @@ describe('Reconnection', function () {
     networkUp = false
 
     assert.strictEqual(connectCalled, 1)
-    await assertRejects(db.ping(), 'test')
+    await assert.rejects(db.ping(), /test/)
     assert.strictEqual(connectCalled, 2)
 
     assert.strictEqual(connectCalled, 2)
-    await assertRejects(db.ping(), 'test')
+    await assert.rejects(db.ping(), /test/)
     assert.strictEqual(connectCalled, 3)
 
     networkUp = true
