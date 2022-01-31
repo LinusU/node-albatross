@@ -95,6 +95,26 @@ Send the `ping` command to the server, to check that the connection is still int
 
 Optionally accepts a timeout in milliseconds.
 
+#### `.transaction(fn): Promise`
+
+Runs a provided function within a transaction, retrying either the commit operation or entire transaction as needed (and when the error permits) to better ensure that the transaction can complete successfully.
+
+Example:
+
+```js
+const user = db.collection('user')
+
+const result = await db.transaction(async (session) => {
+    await user.insert({ name: 'Linus', born: 1992 }, { session })
+    await user.insert({ name: 'Steve', born: 1955 }, { session })
+
+    return await user.findOne({ born: 1992 }, { session })
+})
+
+console.log('Hello ' + result.name)
+//=> Hello Linus
+```
+
 #### `.close(): Promise<void>`
 
 Closes the connection to the server.
