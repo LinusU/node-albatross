@@ -1,20 +1,16 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const stream = require('stream')
-const crypto = require('crypto')
-const getStream = require('get-stream')
-const albatross = require('../')
+import assert from 'node:assert'
+import stream from 'node:stream'
+import getStream from 'get-stream'
+
+import albatross, { ObjectId } from '../index.js'
 
 const NAME = 'hello.txt'
 const TYPE = 'text/plain'
 const TEST = 'Hello, World!'
 const META = { hello: 'World' }
 const OPTS = { filename: NAME, contentType: TYPE, metadata: META }
-
-function md5 (str) {
-  return crypto.createHash('md5').update(str).digest('hex')
-}
 
 function testStream () {
   const s = new stream.PassThrough()
@@ -47,9 +43,8 @@ describe('Grid', () => {
       const result = await grid.upload(testStream(), OPTS)
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.ok(result.id instanceof ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
-      assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)
       assert.strictEqual(result.filename, NAME)
       assert.strictEqual(result.contentType, TYPE)
@@ -60,9 +55,8 @@ describe('Grid', () => {
       const result = await grid.upload(testStream())
       fileId = result.id
 
-      assert.ok(result.id instanceof albatross.ObjectId)
+      assert.ok(result.id instanceof ObjectId)
       assert.strictEqual(typeof result.chunkSize, 'number')
-      assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)
       assert.strictEqual(result.filename, '')
       assert.strictEqual(result.contentType, '')
@@ -92,7 +86,6 @@ describe('Grid', () => {
     it('should download a file', async () => {
       const result = await grid.download(fileId)
 
-      assert.strictEqual(result.md5, md5(TEST))
       assert.strictEqual(result.length, TEST.length)
       assert.strictEqual(typeof result.chunkSize, 'number')
       assert.strictEqual(result.filename, NAME)

@@ -1,9 +1,9 @@
 /* eslint-env mocha */
 
-const assert = require('assert')
-const assertRejects = require('assert-rejects')
-const mongodb = require('mongodb')
-const albatross = require('../')
+import assert from 'node:assert'
+import mongodb from 'mongodb'
+
+import albatross, { Binary, Code, Decimal128, Double, Int32, Long, MaxKey, MinKey, ObjectId, Timestamp } from '../index.js'
 
 describe('Albatross', function () {
   let db
@@ -21,24 +21,23 @@ describe('Albatross', function () {
     const str = id1.toHexString()
     const id2 = db.id(str)
 
-    assert.ok(id1 instanceof albatross.ObjectId)
-    assert.ok(id2 instanceof albatross.ObjectId)
-    assert.ok(albatross.ObjectId.isValid(str))
+    assert.ok(id1 instanceof ObjectId)
+    assert.ok(id2 instanceof ObjectId)
+    assert.ok(ObjectId.isValid(str))
     assert.ok(id1.equals(id2))
   })
 
   it('should expose mongodb bson api', function () {
-    assert.strictEqual(albatross.Binary, mongodb.Binary)
-    assert.strictEqual(albatross.Code, mongodb.Code)
-    assert.strictEqual(albatross.DBRef, mongodb.DBRef)
-    assert.strictEqual(albatross.Decimal128, mongodb.Decimal128)
-    assert.strictEqual(albatross.Double, mongodb.Double)
-    assert.strictEqual(albatross.Int32, mongodb.Int32)
-    assert.strictEqual(albatross.Long, mongodb.Long)
-    assert.strictEqual(albatross.MaxKey, mongodb.MaxKey)
-    assert.strictEqual(albatross.MinKey, mongodb.MinKey)
-    assert.strictEqual(albatross.ObjectId, mongodb.ObjectId)
-    assert.strictEqual(albatross.Timestamp, mongodb.Timestamp)
+    assert.strictEqual(Binary, mongodb.Binary)
+    assert.strictEqual(Code, mongodb.Code)
+    assert.strictEqual(Decimal128, mongodb.Decimal128)
+    assert.strictEqual(Double, mongodb.Double)
+    assert.strictEqual(Int32, mongodb.Int32)
+    assert.strictEqual(Long, mongodb.Long)
+    assert.strictEqual(MaxKey, mongodb.MaxKey)
+    assert.strictEqual(MinKey, mongodb.MinKey)
+    assert.strictEqual(ObjectId, mongodb.ObjectId)
+    assert.strictEqual(Timestamp, mongodb.Timestamp)
   })
 
   it('should ping server', async () => {
@@ -57,6 +56,6 @@ describe('Albatross', function () {
       for (let i = 0; i < 100; i++) await db.ping(0)
     }
 
-    await assertRejects(ping(), /Timeout reached while waiting for ping/)
+    await assert.rejects(ping(), /Timeout reached while waiting for ping/)
   })
 })
