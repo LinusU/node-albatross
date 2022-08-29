@@ -35,20 +35,20 @@ export interface Collection<TSchema extends { _id: any }> {
   insert (doc: DeepReadonly<mongodb.OptionalId<TSchema>>, options?: mongodb.InsertOneOptions): Promise<mongodb.WithId<TSchema>>
   insert (docs: DeepReadonly<mongodb.OptionalId<TSchema>>[], options?: mongodb.BulkWriteOptions): Promise<mongodb.WithId<TSchema>[]>
 
-  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: WithoutProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }>): Promise<TSchema>
-  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options?: WithoutProjection<mongodb.FindOneAndUpdateOptions>): Promise<TSchema | null>
+  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: WithoutProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }>): Promise<TSchema>
+  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options?: WithoutProjection<mongodb.FindOneAndUpdateOptions>): Promise<TSchema | null>
 
-  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey>>
-  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey> | null>
+  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey>>
+  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey> | null>
 
-  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey>>
-  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey> | null>
+  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey>>
+  findOneAndUpdate<TKey extends keyof TSchema> (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: SpecificProjection<mongodb.FindOneAndUpdateOptions, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey> | null>
 
-  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options: mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }): Promise<object>
-  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options?: mongodb.FindOneAndUpdateOptions): Promise<object | null>
+  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options: mongodb.FindOneAndUpdateOptions & { returnDocument: 'after', upsert: true }): Promise<object>
+  findOneAndUpdate (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options?: mongodb.FindOneAndUpdateOptions): Promise<object | null>
 
   updateOne (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOptions): Promise<{ matched: 0 | 1, modified: 0 | 1 }>
-  updateMany (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema> | Partial<TSchema>, options?: mongodb.UpdateOptions): Promise<{ matched: number, modified: number }>
+  updateMany (filter: mongodb.Filter<TSchema>, update: mongodb.UpdateFilter<TSchema>, options?: mongodb.UpdateOptions): Promise<{ matched: number, modified: number }>
 
   deleteOne (filter: mongodb.Filter<TSchema>, options?: mongodb.DeleteOptions): Promise<0 | 1>
   deleteMany (filter: mongodb.Filter<TSchema>, options?: mongodb.DeleteOptions): Promise<number>
