@@ -74,6 +74,7 @@ declare namespace albatross {
     aggregate (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<object[]>
 
     createIndex (fieldOrSpec: string | any, options?: mongodb.IndexOptions): Promise<string>
+    dropIndex (indexName: string, options?: mongodb.CommonOptions & { maxTimeMS?: number }): Promise<any>
   }
 
   interface FileInfo {
