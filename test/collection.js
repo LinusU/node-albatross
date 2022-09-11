@@ -422,4 +422,16 @@ describe('Collection', () => {
       assert.strictEqual(docs.length, 0)
     })
   })
+
+  describe('#findOneAndDelete', () => {
+    it('should delete one record', async () => {
+      const res = await user.findOneAndDelete({ name: 'Linus' })
+      assert.strictEqual(res.name, 'Linus')
+      assert.strictEqual(res.year, undefined)
+
+      const docs = await user.find({ name: 'Linus' })
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 0)
+    })
+  })
 })

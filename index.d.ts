@@ -26,6 +26,10 @@ interface UpdateManyOptions extends Omit<mongodb.UpdateManyOptions, 'hint'> {
   hint?: string | object
 }
 
+interface FindOneAndDeleteOption<T> extends Omit<mongodb.FindOneAndDeleteOption<T>, 'hint'> {
+  hint?: string | object
+}
+
 declare function albatross (uri: string): albatross.Albatross
 
 declare namespace albatross {
@@ -70,6 +74,11 @@ declare namespace albatross {
 
     deleteOne (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions & { bypassDocumentValidation?: boolean, hint?: string | object }): Promise<0 | 1>
     deleteMany (filter: mongodb.FilterQuery<TSchema>, options?: mongodb.CommonOptions & { hint?: string | object }): Promise<number>
+
+    findOneAndDelete (filter: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<FindOneAndDeleteOption<TSchema>>): Promise<TSchema | null>
+    findOneAndDelete<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, options: SpecificProjection<FindOneAndDeleteOption<TSchema>, { [key in TKey]: 1 | true } & { _id: 0 | false }>): Promise<Pick<TSchema, TKey> | null>
+    findOneAndDelete<TKey extends keyof TSchema> (filter: mongodb.FilterQuery<TSchema>, options: SpecificProjection<FindOneAndDeleteOption<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Pick<TSchema, '_id' | TKey> | null>
+    findOneAndDelete (filter: mongodb.FilterQuery<TSchema>, options?: FindOneAndDeleteOption<TSchema>): Promise<object | null>
 
     aggregate (pipeline: object[], options?: mongodb.CollectionAggregationOptions): Promise<object[]>
 

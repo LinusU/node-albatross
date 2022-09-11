@@ -112,6 +112,13 @@ describe('Undefined', () => {
     assert.strictEqual(await collection.deleteMany({ a: 1, b: undefined }), 2)
   })
 
+  it('#findOneAndDelete should handle undefined', async () => {
+    const inserted = await collection.insert({ a: 1, b: 2 })
+
+    assert.strictEqual(await collection.findOneAndDelete({ a: 1, b: null }), null)
+    assert.deepStrictEqual(await collection.findOneAndDelete({ a: 1, b: undefined }), inserted)
+  })
+
   it('#aggregate should handle undefined', async () => {
     const inserted = await collection.insert({ foo: 1, bar: 2 })
     const fetched = await collection.aggregate([{ $match: { foo: 1, bar: undefined } }])

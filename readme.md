@@ -185,6 +185,10 @@ Deletes a single document matching `filter`. Resolves with the number of documen
 
 Deletes multiple documents matching `filter`. Resolves with the number of documents deleted.
 
+#### `findOneAndDelete(filter[, opts]): Promise<object>`
+
+Finds a document and deletes it in one atomic operation.
+
 #### `aggregate(pipeline[, opts]): Promise<object[]>`
 
 Executes an aggregation framework pipeline against the collection. Resolves with the aggregated objects.
