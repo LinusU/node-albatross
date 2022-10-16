@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "standard && mocha && npm run tsc",
-    "tsc": "tsc --noEmit --allowJs --checkJs index.d.ts test/*.js"
+    "tsc": "tsc --noEmit --allowJs --checkJs --lib es2018 index.d.ts test/*.js"
   },
   "dependencies": {
     "@types/bson": "1.0.11",

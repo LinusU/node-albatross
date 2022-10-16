@@ -47,6 +47,11 @@ declare namespace albatross {
     find<TKey extends keyof TSchema> (query: mongodb.FilterQuery<TSchema>, options: SpecificProjection<FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): Promise<Array<Pick<TSchema, '_id' | TKey>>>
     find (query: mongodb.FilterQuery<TSchema>, options: FindOneOptions<TSchema>): Promise<object[]>
 
+    stream (query: mongodb.FilterQuery<TSchema>, options?: WithoutProjection<FindOneOptions<TSchema>>): AsyncGenerator<TSchema, void, void>
+    stream<TKey extends keyof TSchema> (query: mongodb.FilterQuery<TSchema>, options: SpecificProjection<FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id: 0 | false }>): AsyncGenerator<Pick<TSchema, TKey>, void, void>
+    stream<TKey extends keyof TSchema> (query: mongodb.FilterQuery<TSchema>, options: SpecificProjection<FindOneOptions<TSchema>, { [key in TKey]: 1 | true } & { _id?: 1 | true }>): AsyncGenerator<Pick<TSchema, '_id' | TKey>, void, void>
+    stream (query: mongodb.FilterQuery<TSchema>, options: FindOneOptions<TSchema>): AsyncGenerator<object, void, void>
+
     count (query?: mongodb.FilterQuery<TSchema>, options?: mongodb.MongoCountPreferences): Promise<number>
 
     distinct<TKey extends keyof mongodb.WithId<TSchema>> (key: TKey, query?: mongodb.FilterQuery<TSchema>, options?: { readPreference?: mongodb.ReadPreference | string, maxTimeMS?: number, session?: mongodb.ClientSession }): Promise<Array<FlattenIfArray<mongodb.WithId<TSchema>[TKey]>>>

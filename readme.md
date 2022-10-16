@@ -133,6 +133,10 @@ Find the first document that matches `query`.
 
 Find all records that matches `query`.
 
+#### `stream(query[, opts]): AsyncIterable<object>`
+
+Find all records that matches `query` and return an async iterable that emits each document as it's found.
+
 #### `count(query[, opts]): Promise<number>`
 
 Count number of documents matching the query.

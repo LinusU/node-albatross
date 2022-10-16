@@ -7,6 +7,12 @@ const albatross = require('../')
 const id = crypto.randomBytes(4).toString('hex')
 const ObjectId = albatross.ObjectId
 
+async function collect (stream) {
+  const result = []
+  for await (const doc of stream) result.push(doc)
+  return result
+}
+
 /**
  * @typedef {Object} User
  * @property {import('bson').ObjectId} _id
@@ -130,6 +136,59 @@ describe('Collection', () => {
 
     it('should sort records descending', async () => {
       const docs = await user.find({}, { sort: { name: -1 } })
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 3)
+      assert.strictEqual(docs[0].name, 'Steve')
+      assert.strictEqual(docs[1].name, 'Linus')
+      assert.strictEqual(docs[2].name, 'Bob')
+    })
+  })
+
+  describe('#stream', () => {
+    it('should find one record', async () => {
+      const docs = await collect(user.stream({ name: 'Linus' }))
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 1)
+      assert.strictEqual(docs[0].name, 'Linus')
+    })
+
+    it('should find multiple records', async () => {
+      const docs = await collect(user.stream({ name: { $ne: 'Linus' } }))
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 2)
+      assert.notStrictEqual(docs[0].name, 'Linus')
+      assert.notStrictEqual(docs[1].name, 'Linus')
+    })
+
+    it('should find all records', async () => {
+      const docs = await collect(user.stream({}))
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 3)
+    })
+
+    it('should limit number of records', async () => {
+      const docs = await collect(user.stream({}, { limit: 2 }))
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 2)
+    })
+
+    it('should sort records ascending', async () => {
+      const docs = await collect(user.stream({}, { sort: { name: 1 } }))
+      assert.ok(docs)
+      assert.ok(Array.isArray(docs))
+      assert.strictEqual(docs.length, 3)
+      assert.strictEqual(docs[0].name, 'Bob')
+      assert.strictEqual(docs[1].name, 'Linus')
+      assert.strictEqual(docs[2].name, 'Steve')
+    })
+
+    it('should sort records descending', async () => {
+      const docs = await collect(user.stream({}, { sort: { name: -1 } }))
       assert.ok(docs)
       assert.ok(Array.isArray(docs))
       assert.strictEqual(docs.length, 3)
