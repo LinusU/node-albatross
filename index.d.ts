@@ -6,7 +6,7 @@ type DeepReadonly<T> = T extends Date | RegExp | string | number | boolean | big
   ? T
   : T extends {}
   ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
-  : Readonly<T>
+  : T
 
 type SpecificProjection<T, TProjection> = Omit<T, 'projection'> & { projection: TProjection }
 type WithoutProjection<T> = T & { fields?: undefined, projection?: undefined }
