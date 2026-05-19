@@ -1,6 +1,6 @@
 {
   "name": "albatross",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "license": "MIT",
   "repository": "LinusU/node-albatross",
   "type": "module",
