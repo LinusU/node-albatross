@@ -4,24 +4,24 @@ on:
   pull_request:
     branches:
     - master
-    - v5.x
+    - v6.x
 
 jobs:
   test:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14.20.1, 16.0.0, 18.0.0]
-        mongodb: [6.0, 7.0]
+        node: [16.20.1, 18.0.0, 20.0.0, 22.0.0, 24.0.0]
+        mongodb: [6.0, 7.0, 8.0]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Use Node.js ${{ matrix.node }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node }}
     - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.8.0
+      uses: supercharge/mongodb-github-action@1.12.1
       with:
         mongodb-replica-set: test
         mongodb-version: ${{ matrix.mongodb }}
