@@ -15,19 +15,19 @@
     "tsc": "tsc --allowSyntheticDefaultImports --noEmit --allowJs --checkJs index.d.ts test/*.js"
   },
   "dependencies": {
-    "bson": "^5.5.1",
-    "debug": "^4.4.1",
-    "mongodb": "^5.9.2"
+    "bson": "^6.10.4",
+    "debug": "^4.4.3",
+    "mongodb": "^6.21.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^16.4.13",
-    "get-stream": "^6.0.1",
+    "@types/node": "^16.18.126",
+    "get-stream": "^7.0.1",
     "mocha": "^10.8.2",
-    "standard": "^17.0.0",
-    "typescript": "^5.8.3"
+    "standard": "^17.1.2",
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": "^14.20.1 || >=16.0.0"
+    "node": "^16.20.1 || >=18.0.0"
   }
 }
